@@ -1,0 +1,109 @@
+.container-body {
+    padding: 28px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    background-color: black;
+    color: white;
+}
+
+.container-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.title-content {
+    font-size: 2.1rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #f1f1f1;
+}
+
+.left-side {
+    flex: 2;
+}
+
+.left-side-content,
+.right-side-content {
+    background-color: #181818;
+    border-radius: 24px;
+    padding: 24px;
+    margin: 24px;
+}
+
+.transaction-content {
+    h1 {
+        margin-bottom: 24px;
+    }
+}
+
+.transaction-list {
+    border-top: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Custom scrollbar styles */
+.transaction-list::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+.transaction-list::-webkit-scrollbar-track {
+    background: #181818; /* Background of the scrollbar track */
+    border-radius: 10px;
+}
+
+.transaction-list::-webkit-scrollbar-thumb {
+    background: #474747; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners of the scrollbar thumb */
+    border: 2px solid #181818; /* Optional: adds a border around the thumb */
+}
+
+.transaction-list::-webkit-scrollbar-thumb:hover {
+    background: #2b2a2a; /* Color of the scrollbar thumb on hover */
+}
+
+.transaction-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 12px 12px 0;
+
+    p{
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #20C997;
+    }
+}
+
+.transaction-item-content{
+    p{
+        font-size: 1.2rem;
+        color: #4F4F4F;
+    }
+}
+
+.right-side {
+    flex: 1;
+}
+
+.total-amount{
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #20C997;
+}
+
+/* .right-side-content{
+    padding: 24px;
+    border-radius: 24px;
+    background-color: #181818;
+} */

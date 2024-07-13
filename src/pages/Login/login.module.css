@@ -1,0 +1,250 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #000000;
+    --gap: 5em;
+    --line: 1px;
+    --color: #443ad8;
+
+    background-image: linear-gradient(
+            -90deg,
+            transparent calc(var(--gap) - var(--line)),
+            var(--color) calc(var(--gap) - var(--line) + 1px),
+            var(--color) var(--gap)
+        ),
+        linear-gradient(
+            0deg,
+            transparent calc(var(--gap) - var(--line)),
+            var(--color) calc(var(--gap) - var(--line) + 1px),
+            var(--color) var(--gap)
+        );
+    background-size: var(--gap) var(--gap);
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    max-width: 600px;
+    border-radius: 20px;
+    padding: 20px;
+    margin: auto 20px;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px;
+    h1 {
+        font-size: 36px;
+        font-weight: bold;
+    }
+}
+
+.image img {
+    width: 100%; /* Ensure the image stretches to fit its container */
+    max-width: 100%;
+    height: auto;
+    /* margin: 20px; */
+    padding: auto;
+}
+
+.content {
+    max-width: 400px;
+    width: 100%;
+    /* display: flex; */
+
+}
+
+.content-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-login {
+    margin: 20px 0;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    padding: 10px;
+    border: 1px solid #e8e8e8;
+    border-radius: 5px;
+    margin-top: 40px;
+    /* max-height: 50px;
+    width: 100%; */
+    img {
+        width: 24px;
+        height: 24px;
+    }
+
+    &:hover {
+        background-color: #f8f8f8;
+        cursor: pointer;
+    }
+}
+
+.content-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    span {
+        font-size: 12px;
+        color: #a1a1a1;
+    }
+}
+
+.or {
+    margin: 40px 0;
+}
+
+.form {
+    width: 100%;
+}
+
+.input-group {
+    margin: 10px 0;
+}
+
+.input {
+    width: 100%;
+    height: 44px;
+    background-color: #05060f0a;
+    border-radius: 0.5rem;
+    padding: 0 1rem;
+    border: 2px solid transparent;
+    font-size: 1.5rem;
+    transition: border-color 0.3s cubic-bezier(0.25, 0.01, 0.25, 1), color 0.3s cubic-bezier(0.25, 0.01, 0.25, 1),
+        background 0.2s cubic-bezier(0.25, 0.01, 0.25, 1);
+}
+
+.label {
+    margin-bottom: 0.3rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #05060f99;
+    transition: color 0.3s cubic-bezier(0.25, 0.01, 0.25, 1);
+}
+
+.input:hover,
+.input:focus,
+.input-group:hover .input {
+    outline: none;
+    border-color: #05060f;
+}
+
+.input-group:hover .label,
+.input:focus {
+    color: #05060fc2;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    input {
+        width: 12px;
+        height: 12px;
+    }
+
+    input[type='checkbox']:checked {
+        background-color: #443ad8;
+        border-color: #443ad8;
+    }
+
+    label {
+        font-size: 12px;
+        color: #05060f;
+    }
+}
+
+.forgot-password a {
+    font-size: 12px;
+    color: #443ad8;
+    padding: 10px;
+}
+
+.color-button {
+    background-color: #443ad8;
+
+    input {
+        color: #ffffff;
+        font-weight: 500;
+        line-height: 25px;
+        background: transparent;
+        font-size: 1.2em;
+        cursor: pointer;
+    }
+
+    &:hover {
+        background-color: #554be0;
+    }
+}
+
+.create-account {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: #05060f;
+    margin-top: 20px;
+    a {
+        color: #443ad8;
+        text-decoration-line: underline;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .column {
+        width: 100%;
+        max-width: unset;
+        height: 100%;
+    }
+
+    .title {
+        display: block;
+    }
+
+    .image img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        margin: 20px;
+    }
+
+    .content {
+        text-align: left;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding: 40px;
+    }
+}

@@ -1,0 +1,51 @@
+/* Header.css */
+
+.header-container {
+    background-color: #443ad8;
+    color: #fff;
+    padding: 10px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-container h2 {
+    margin: 0;
+}
+
+.header-container h2 {
+    margin-right: 10px;
+}
+
+.header-container button {
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.group-actions {
+    display: flex;
+}
+
+.button-action {
+    display: flex;
+    align-items: center;
+    margin: 0 16px;
+    background-color: #333;
+    border-radius: 12px;
+    &:hover {
+        background-color: #4d4b4b;
+    }
+    p {
+        margin: 0;
+        padding: 8px;
+        font-weight: 500;
+    }
+}
+
+.icon-action {
+    padding: 4px;
+    background-color: white;
+    border-radius: 99px;
+    color: #333;
+}
