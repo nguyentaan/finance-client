@@ -4,13 +4,18 @@ import classNames from 'classnames/bind';
 import styles from './tabContent.module.css';
 import { toggleIsOpen } from '~/reducers/homeSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
 const TabContent = () => {
     const dispatch = useDispatch();
     const isOpen = useSelector((state) => state.isOpen.isOpen);
+    const [selectedOption, setSelectedOption] = React.useState('...');
+
+    const handleSelect = (option) => {
+        setSelectedOption(option);
+    };
 
     const handleCloseTab = () => {
         dispatch(toggleIsOpen());
@@ -29,11 +34,30 @@ const TabContent = () => {
                     <div className={cx('list-item')}>
                         <div className={cx('item-content')}>
                             <h3>Type</h3>
-                            <select className={cx('selection-type')}>
-                                <option value="">Select...</option>
-                                <option value="income">Income</option>
-                                <option value="expenses">Expenses</option>
-                            </select>
+                            <div className={cx('select')}>
+                                <div className={cx('selected')} data-default="..." data-one="Income" data-two="Expense">
+                                    {selectedOption}
+                                    <div className={cx('arrow')}>
+                                        <FontAwesomeIcon icon={faChevronDown} size="1x" />
+                                    </div>
+                                </div>
+                                <div className={cx('options')}>
+                                    {['...', 'Income', 'Expense'].map((option, index) => (
+                                        <div key={option} title={option}>
+                                            <input
+                                                id={option}
+                                                name="option"
+                                                type="radio"
+                                                checked={selectedOption === option}
+                                                onChange={() => handleSelect(option)}
+                                            />
+                                            <label className={cx('option')} htmlFor={option} data-txt={option}>
+                                                {option}
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                         <div className={cx('item-content')}>
                             <h3>Name of transaction</h3>

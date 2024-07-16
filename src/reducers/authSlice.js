@@ -3,9 +3,14 @@ import axios from 'axios';
 
 export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId, { rejectWithValue }) => {
     try {
-        const res = await axios.post('http://localhost:5215/api/Auth/google-signin', {
-            tokenId,
-        });
+        // const res = await axios.post(
+            // 'https://localhost:7086/api/Auth/google-signin',
+            // const res = await axios.post('http://localhost:5215/api/Auth/google-signin',
+            const res = await axios.post('https://personal-finacne-tracking.azurewebsites.net/api/Auth/google-signin',
+            {
+                tokenId,
+            },
+        );
         console.log('Google Sign-In Response:', res.data);
 
         if (res.data && res.data.message === 'Google sign-in successful') {
@@ -24,12 +29,17 @@ export const login = createAsyncThunk(
     async ({ email, password }, { dispatch }) => {
         try {
             // console.log('Login Payload:', { email, password });
-            await axios.post('http://localhost:5215/login?useCookies=true&useSessionCookies=true', {
-                email,
-                password,
-            },{
-                withCredentials: true,
-            });
+            await axios.post(
+                'https://personal-finacne-tracking.azurewebsites.net/login?useCookies=true&useSessionCookies=true',
+                // await axios.post('http://localhost:5215/login?useCookies=true&useSessionCookies=true',
+                {
+                    email,
+                    password,
+                },
+                {
+                    withCredentials: true,
+                },
+            );
             const output = await dispatch(fetchUserData());
             localStorage.setItem('user', JSON.stringify(output.payload));
             return output.payload;
@@ -41,9 +51,13 @@ export const login = createAsyncThunk(
 
 export const fetchUserData = createAsyncThunk('auth/fetchUserData', async (_, { rejectWithValue }) => {
     try {
-        const res = await axios.get('http://localhost:5215/users/me', {
-            withCredentials: true,
-        });
+        const res = await axios.get(
+            'https://personal-finacne-tracking.azurewebsites.net/users/me',
+            // const res = await axios.get('http://localhost:5215/users/me',
+            {
+                withCredentials: true,
+            },
+        );
         // localStorage.setItem('user', JSON.stringify(res.data));
         return res.data;
     } catch (err) {
@@ -56,10 +70,14 @@ export const register = createAsyncThunk(
     async ({email, password}, {rejectWithValue}) => {
         try {
             console.log('Register Payload:', {email, password});
-            const res = await axios.post('http://localhost:5215/register', {
-                email,
-                password,
-            });
+            const res = await axios.post(
+                'https://personal-finacne-tracking.azurewebsites.net/register',
+                // const res = await axios.post('http://localhost:5215/register',
+                {
+                    email,
+                    password,
+                },
+            );
             console.log('Register Response:', res.data);
 
             return res.data;

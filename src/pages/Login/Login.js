@@ -104,7 +104,7 @@ const Login = () => {
                                         setHasEmailError(false);
                                     }}
                                 />
-                                {hasEmailError && <p className={cx('error-message')}>{error}</p>}
+                                {/* {hasEmailError && <p className={cx('error-message')}>{error}</p>} */}
                             </div>
 
                             <div className={cx('input-group')}>
@@ -120,7 +120,7 @@ const Login = () => {
                                         setHasPasswordError(false);
                                     }}
                                 />
-                                {hasPasswordError && <p className={cx('error-message')}>{error}</p>}
+                                {/* {hasPasswordError && <p className={cx('error-message')}>{error}</p>} */}
                             </div>
                             <div className={cx('options')}>
                                 <div className={cx('remember-me')}>
@@ -143,7 +143,7 @@ const Login = () => {
                                 <Link to="/register">Create account</Link>
                             </div>
                         </form>
-                        {/* {error && <p className={cx('error-message')}>{error}</p>} */}
+                        {error && <p className={cx('error-message')}>{error}</p>}
                     </div>
                 </div>
             </div>
