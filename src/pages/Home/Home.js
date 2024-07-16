@@ -4,7 +4,7 @@ import LineChart from '~/components/charts/LineChart';
 import DoughnutChart from '~/components/charts/DoughnutChart';
 import Calendar from '~/components/calendar/Calendar';
 import { toggleIsOpen } from '~/reducers/homeSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import TabContent from '~/components/tabContent/tabContent';
 
 const cx = classNames.bind(styles);
@@ -85,19 +85,14 @@ const sampleTransactions = [
 ];
 
 function Home() {
-    const dispatch = useDispatch();
-    const handleToggleTab = () => {
-        dispatch(toggleIsOpen());
-    };
+    // const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth);
+    // console.log('User:', user.user.email);
     return (
         <div className={cx('container-body')}>
-            <button className={cx('toggle-button')} onClick={handleToggleTab}>
-                Toggle Tab
-            </button>
-            {/* Render TabContent component */}
             <TabContent />
             <div className={cx('title-content')}>
-                <h1>Welcome, </h1>
+                <h1>Welcome, {user.user.email} </h1>
             </div>
             <div className={cx('container-box')}>
                 <div className={cx('left-side')}>

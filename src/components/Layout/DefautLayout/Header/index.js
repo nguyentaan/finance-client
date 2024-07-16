@@ -16,10 +16,10 @@ function Header() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const isOpen = useSelector((state) => state.isOpen.isOpen);
-    const user1 = useSelector((state) => state.auth);
-    console.log('IsOpen:', isOpen);
-    console.log('User:', user1);
+    // const isOpen = useSelector((state) => state.isOpen.isOpen);
+    // const user1 = useSelector((state) => state.auth);
+    // console.log('IsOpen:', isOpen);
+    // console.log('User:', user1);
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
