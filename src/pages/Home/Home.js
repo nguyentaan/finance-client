@@ -3,8 +3,8 @@ import classNames from 'classnames/bind';
 import LineChart from '~/components/charts/LineChart';
 import DoughnutChart from '~/components/charts/DoughnutChart';
 import Calendar from '~/components/calendar/Calendar';
-import { toggleIsOpen } from '~/reducers/homeSlice';
-import { useDispatch, useSelector } from 'react-redux';
+// import { toggleIsOpen } from '~/reducers/homeSlice';
+import { useSelector } from 'react-redux';
 import TabContent from '~/components/tabContent/tabContent';
 
 const cx = classNames.bind(styles);
