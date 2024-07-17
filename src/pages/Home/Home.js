@@ -4,55 +4,13 @@ import LineChart from '~/components/charts/LineChart';
 import DoughnutChart from '~/components/charts/DoughnutChart';
 import Calendar from '~/components/calendar/Calendar';
 // import { toggleIsOpen } from '~/reducers/homeSlice';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import TabContent from '~/components/tabContent/tabContent';
+import { fetchTransactionsByEmail } from '~/reducers/transSlice';
+import { useEffect, useState } from 'react';
+import TransactionSummary from '~/components/transactionSumary';
 
 const cx = classNames.bind(styles);
-const transactionData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'Income',
-            data: [4000, 4500, 5000, 5500, 6000, 6500, 7000],
-            borderColor: 'rgba(75,192,192,1)',
-            backgroundColor: 'rgba(75,192,192,0.2)',
-            fill: true,
-            tension: 0.1,
-        },
-        {
-            label: 'Expenses',
-            data: [3000, 3200, 2800, 3400, 3000, 3100, 3200],
-            borderColor: 'rgba(255,99,132,1)',
-            backgroundColor: 'rgba(255,99,132,0.2)',
-            fill: true,
-            tension: 0.1,
-        },
-    ],
-};
-
-const doughnutChartData = {
-    labels: ['Rent', 'Groceries', 'Utilities', 'Entertainment', 'Savings'],
-    datasets: [
-        {
-            data: [1000, 500, 300, 200, 1500],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-            ],
-            borderWidth: 1,
-        },
-    ],
-};
 
 const lineChartOptions = {
     responsive: true,
@@ -71,23 +29,116 @@ const doughnutChartOptions = {
     maintainAspectRatio: false,
 };
 
-const sampleTransactions = [
-    { id: 1, name: 'Salary', type: 'Income', date: '2023-01-01', amount: '1,000,000 VND' },
-    { id: 2, name: 'Groceries', type: 'Expense', date: '2023-01-02', amount: '200,000 VND' },
-    { id: 3, name: 'Freelance Work', type: 'Income', date: '2023-01-03', amount: '500,000 VND' },
-    { id: 4, name: 'Transportation', type: 'Expense', date: '2023-01-04', amount: '100,000 VND' },
-    { id: 5, name: 'Bonus', type: 'Income', date: '2023-01-05', amount: '700,000 VND' },
-    { id: 6, name: 'Shopping', type: 'Expense', date: '2023-01-06', amount: '300,000 VND' },
-    { id: 7, name: 'Consulting Fee', type: 'Income', date: '2023-01-07', amount: '400,000 VND' },
-    { id: 8, name: 'Dining Out', type: 'Expense', date: '2023-01-08', amount: '150,000 VND' },
-    { id: 9, name: 'Investment Dividend', type: 'Income', date: '2023-01-09', amount: '600,000 VND' },
-    { id: 10, name: 'Utilities', type: 'Expense', date: '2023-01-10', amount: '250,000 VND' },
-];
-
 function Home() {
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.auth);
-    // console.log('User:', user.user.email);
+    const transactions = useSelector((state) => state.transactions.transactions);
+    const [selectedFilter, setSelectedFilter] = useState('Both');
+    // const { loading, error } = useSelector((state) => state.transactions);
+    // const userEmail = user.user.email;
+    const userEmail = 'tanhero2002@gmail.com';
+
+    // console.log('transactions:', transactions);
+
+    const handleFilterSelect = (filter) => {
+        setSelectedFilter(filter);
+        console.log('selectedFilter:', selectedFilter);
+    };
+
+    useEffect(() => {
+        dispatch(fetchTransactionsByEmail(userEmail));
+    }, [dispatch, userEmail]);
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // January is 0!
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
+    const transactionsByDate = transactions.reduce((acc, transaction) => {
+        const dateKey = new Date(transaction.date).toLocaleDateString();
+        if (!acc[dateKey]) {
+            acc[dateKey] = { income: 0, expense: 0 };
+        }
+        if (transaction.type === 'Income') {
+            acc[dateKey].income += transaction.amount;
+        } else if (transaction.type === 'Expense') {
+            acc[dateKey].expense += transaction.amount;
+        }
+        return acc;
+    }, {});
+
+    const lineChartData = {
+        labels: Object.keys(transactionsByDate),
+        datasets: [
+            {
+                label: 'Income',
+                data: Object.keys(transactionsByDate).map((date) => transactionsByDate[date].income),
+                borderColor: '#20C997',
+                backgroundColor: 'rgba(0, 255, 0, 0.1)',
+            },
+            {
+                label: 'Expense',
+                data: Object.keys(transactionsByDate).map((date) => transactionsByDate[date].expense),
+                borderColor: '#E74C3C',
+                backgroundColor: 'rgba(255, 0, 0, 0.1)',
+            },
+        ],
+    };
+
+    const filterByType = transactions
+        .filter((transaction) => {
+            if (selectedFilter === 'Income') {
+                return transaction.type === 'Income';
+            } else if (selectedFilter === 'Expense') {
+                return transaction.type === 'Expense';
+            } else {
+                return true; // Include all transactions for 'Both' type
+            }
+        })
+        .reduce((acc, transaction) => {
+            if (!acc[transaction.name]) {
+                acc[transaction.name] = 0;
+            }
+            acc[transaction.name] += transaction.amount;
+            return acc;
+        }, {});
+
+    // Prepare doughnutChartData for DoughnutChart component
+    const doughnutChartData = {
+        labels: Object.keys(filterByType),
+        datasets: [
+            {
+                label: selectedFilter,
+                data: Object.values(filterByType),
+                backgroundColor: [
+                    '#FF6384', // Red
+                    '#36A2EB', // Blue
+                    '#FFCE56', // Yellow
+                    '#4BC0C0', // Green
+                    '#9966FF', // Purple
+                    '#FF9F40', // Orange
+                    '#5C5C5C', // Gray
+                    '#F7FF33', // Yellow
+                    '#4C005C', // Purple
+                    '#5CC5C5', // Cyan
+                    '#6699FF', // Blue
+                    '#339933', // Green
+                    '#999999', // Gray
+                    '#B333FF', // Purple
+                    '#FF8033', // Orange
+                    '#CC0000', // Red
+                    '#993300', // Brown
+                    '#FF6600', // Orange
+                    '#4C9900', // Green
+                    '#3300FF', // Blue
+                ],
+            },
+        ],
+    };
+
     return (
         <div className={cx('container-body')}>
             <TabContent />
@@ -97,23 +148,25 @@ function Home() {
             <div className={cx('container-box')}>
                 <div className={cx('left-side')}>
                     <div className={cx('left-side-content')}>
-                        <LineChart data={transactionData} options={lineChartOptions} />
+                        <LineChart data={lineChartData} options={lineChartOptions} />
                     </div>
                     <div className={cx('left-side-content')}>
                         <div className={cx('transaction-content')}>
                             <h1>Transaction</h1>
-                            {sampleTransactions.length === 0 ? (
+                            {transactions.length === 0 ? (
                                 <p>No transactions available</p>
                             ) : (
                                 <div className={cx('transaction-list')}>
-                                    {sampleTransactions.map((transaction) => (
+                                    {transactions.map((transaction) => (
                                         <div key={transaction.id} className={cx('transaction-item')}>
                                             <div className={cx('transaction-item-content')}>
                                                 <h2>{transaction.name}</h2>
                                                 <p>{transaction.type}</p>
-                                                <p>{transaction.date}</p>
+                                                <p>{formatDate(transaction.date)}</p>
                                             </div>
-                                            <p>{transaction.amount}</p>
+                                            <p style={{ color: transaction.type === 'Income' ? '#20C997' : '#E74C3C' }}>
+                                                {transaction.amount.toLocaleString()} VND
+                                            </p>
                                         </div>
                                     ))}
                                 </div>
@@ -126,12 +179,35 @@ function Home() {
                         <Calendar />
                     </div>
                     <div className={cx('right-side-content')}>
-                        <DoughnutChart data={doughnutChartData} options={doughnutChartOptions} />
+                        <div className={cx('chart-filter')}>
+                            <div className={cx('filter-item')}>
+                                <button
+                                    className={cx('value', { selected: selectedFilter === 'Both' })}
+                                    onClick={() => handleFilterSelect('Both')}
+                                >
+                                    Both
+                                </button>
+                                <button
+                                    className={cx('value', { selected: selectedFilter === 'Income' })}
+                                    onClick={() => handleFilterSelect('Income')}
+                                >
+                                    Income
+                                </button>
+                                <button
+                                    className={cx('value', { selected: selectedFilter === 'Expense' })}
+                                    onClick={() => handleFilterSelect('Expense')}
+                                >
+                                    Expense
+                                </button>
+                            </div>
+                        </div>
+                        <div className={cx('chart-contain')}>
+                            <DoughnutChart data={doughnutChartData} options={doughnutChartOptions} />
+                        </div>
                     </div>
                     <div className={cx('right-side-content')}>
                         <div className={cx('total-amount')}>
-                            <h1>Total:</h1>
-                            <p>100.000 VND</p>
+                            <TransactionSummary transactions={transactions} />
                         </div>
                     </div>
                 </div>
