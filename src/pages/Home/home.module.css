@@ -47,6 +47,13 @@
     }
 }
 
+.no-transaction{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 .transaction-list {
     border-top: 1px solid #333;
     display: flex;

@@ -46,8 +46,9 @@ const Login = () => {
                 // console.log('Login Payload:', payload); // Additional logging
                 const response = await dispatch(login(payload));
                 // console.log('Login Response:', response);
-                console.log('status code:', response.payload.status);
-                if (response.payload.status === 200) {
+                // console.log('status code:', response.payload.status);
+                console.log('Login Response:', response.meta.requestStatus);
+                if (response.meta.requestStatus === 'fulfilled') {
                     navigate('/dashboard');
                 } else if (response.error) {
                     setError('Invalid email or password');
@@ -143,7 +144,7 @@ const Login = () => {
                                 <Link to="/register">Create account</Link>
                             </div>
                         </form>
-                        {error && <p className={cx('error-message')}>{error}</p>}
+                        {/* {error && <p className={cx('error-message')}>{error}</p>} */}
                     </div>
                 </div>
             </div>

@@ -9,6 +9,8 @@ import TabContent from '~/components/tabContent/tabContent';
 import { fetchTransactionsByEmail } from '~/reducers/transSlice';
 import { useEffect, useState } from 'react';
 import TransactionSummary from '~/components/transactionSumary';
+import LineChartIcon from '~/assets/line-chart.png';
+import DonutChartIcon from '~/assets/donut-chart.png';
 
 const cx = classNames.bind(styles);
 
@@ -35,14 +37,14 @@ function Home() {
     const transactions = useSelector((state) => state.transactions.transactions);
     const [selectedFilter, setSelectedFilter] = useState('Both');
     // const { loading, error } = useSelector((state) => state.transactions);
-    // const userEmail = user.user.email;
-    const userEmail = 'tanhero2002@gmail.com';
+    const userEmail = user.user.email;
+    // const userEmail = 'tanhero2002@gmail.com';
 
     // console.log('transactions:', transactions);
 
     const handleFilterSelect = (filter) => {
         setSelectedFilter(filter);
-        console.log('selectedFilter:', selectedFilter);
+        // console.log('selectedFilter:', selectedFilter);
     };
 
     useEffect(() => {
@@ -70,18 +72,28 @@ function Home() {
         return acc;
     }, {});
 
+    const sortedTransactions = Object.keys(transactionsByDate).map((dateKey) => ({
+        date: new Date(dateKey),
+        income: transactionsByDate[dateKey].income,
+        expense: transactionsByDate[dateKey].expense,
+    }));
+
+    // Sort the array by date in ascending order (oldest to newest)
+    sortedTransactions.sort((a, b) => a.date - b.date);
+
+    // Prepare lineChartData using the sorted data
     const lineChartData = {
-        labels: Object.keys(transactionsByDate),
+        labels: sortedTransactions.map((item) => item.date.toLocaleDateString()),
         datasets: [
             {
                 label: 'Income',
-                data: Object.keys(transactionsByDate).map((date) => transactionsByDate[date].income),
+                data: sortedTransactions.map((item) => item.income),
                 borderColor: '#20C997',
                 backgroundColor: 'rgba(0, 255, 0, 0.1)',
             },
             {
                 label: 'Expense',
-                data: Object.keys(transactionsByDate).map((date) => transactionsByDate[date].expense),
+                data: sortedTransactions.map((item) => item.expense),
                 borderColor: '#E74C3C',
                 backgroundColor: 'rgba(255, 0, 0, 0.1)',
             },
@@ -148,7 +160,14 @@ function Home() {
             <div className={cx('container-box')}>
                 <div className={cx('left-side')}>
                     <div className={cx('left-side-content')}>
-                        <LineChart data={lineChartData} options={lineChartOptions} />
+                        {transactions.length === 0 ? (
+                            <div className={cx('no-transaction')}>
+                                <p className="chart-title">Transaction History</p>
+                                <img src={LineChartIcon} alt="Line Chart" />
+                            </div>
+                        ) : (
+                            <LineChart data={lineChartData} options={lineChartOptions} />
+                        )}
                     </div>
                     <div className={cx('left-side-content')}>
                         <div className={cx('transaction-content')}>
@@ -165,6 +184,7 @@ function Home() {
                                                 <p>{formatDate(transaction.date)}</p>
                                             </div>
                                             <p style={{ color: transaction.type === 'Income' ? '#20C997' : '#E74C3C' }}>
+                                                {/* {transaction.amount} VND */}
                                                 {transaction.amount.toLocaleString()} VND
                                             </p>
                                         </div>
@@ -176,34 +196,43 @@ function Home() {
                 </div>
                 <div className={cx('right-side')}>
                     <div className={cx('right-side-content')}>
-                        <Calendar />
+                        <Calendar transactions={transactions}/>
                     </div>
                     <div className={cx('right-side-content')}>
-                        <div className={cx('chart-filter')}>
-                            <div className={cx('filter-item')}>
-                                <button
-                                    className={cx('value', { selected: selectedFilter === 'Both' })}
-                                    onClick={() => handleFilterSelect('Both')}
-                                >
-                                    Both
-                                </button>
-                                <button
-                                    className={cx('value', { selected: selectedFilter === 'Income' })}
-                                    onClick={() => handleFilterSelect('Income')}
-                                >
-                                    Income
-                                </button>
-                                <button
-                                    className={cx('value', { selected: selectedFilter === 'Expense' })}
-                                    onClick={() => handleFilterSelect('Expense')}
-                                >
-                                    Expense
-                                </button>
+                        {transactions.length === 0 ? (
+                            <div className={cx('no-transaction')}>
+                                <p className="chart-title">Transaction Summary</p>
+                                <img src={DonutChartIcon} alt="Donut Chart" />
                             </div>
-                        </div>
-                        <div className={cx('chart-contain')}>
-                            <DoughnutChart data={doughnutChartData} options={doughnutChartOptions} />
-                        </div>
+                        ) : (
+                            <div>
+                                <div className={cx('chart-filter')}>
+                                    <div className={cx('filter-item')}>
+                                        <button
+                                            className={cx('value', { selected: selectedFilter === 'Both' })}
+                                            onClick={() => handleFilterSelect('Both')}
+                                        >
+                                            Both
+                                        </button>
+                                        <button
+                                            className={cx('value', { selected: selectedFilter === 'Income' })}
+                                            onClick={() => handleFilterSelect('Income')}
+                                        >
+                                            Income
+                                        </button>
+                                        <button
+                                            className={cx('value', { selected: selectedFilter === 'Expense' })}
+                                            onClick={() => handleFilterSelect('Expense')}
+                                        >
+                                            Expense
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className={cx('chart-contain')}>
+                                    <DoughnutChart data={doughnutChartData} options={doughnutChartOptions} />
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className={cx('right-side-content')}>
                         <div className={cx('total-amount')}>

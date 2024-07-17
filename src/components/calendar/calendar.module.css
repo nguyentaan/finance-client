@@ -1,17 +1,17 @@
 /* Calendar.module.css */
 
-.calendar-container{
+.calendar-container {
     display: flex;
     flex-direction: column;
 }
 
-.calendar-days{
+.calendar-days {
     justify-content: space-between;
     display: flex;
     flex-direction: row;
 }
 
-.calendar-header{
+.calendar-header {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,7 +29,7 @@
     }
 }
 
-.current-date{
+.current-date {
     font-size: 1.8rem;
     font-weight: 700;
 }
@@ -68,6 +68,38 @@
     background-color: rgba(0, 0, 0, 0.1);
 }
 
+.calendar-cell.income .number {
+    /* text-decoration: underline; */
+    border-bottom: 2px solid #20C997;
+    /* text-decoration-color: #20C997; */
+}
+
+.calendar-cell.expense .number {
+    /* text-decoration: underline; */
+    /* text-decoration-color: #EB5757; */
+        border-bottom: 2px solid #EB5757;
+}
+
+.calendar-cell.both {
+    position: relative;
+}
+
+.calendar-cell.both::after {
+    content: '';
+    position: absolute;
+    bottom: 1px;
+    left: 5px;
+    width: 57%;
+    height: 2px;
+    background: linear-gradient(to right, #20C997 50%, #EB5757 50%);
+}
+
+
+/* .calendar-cell.both .number {
+    text-decoration: underline;
+    text-decoration-color: linear-gradient(to right, green 50%, red 50%);
+} */
+
 .number {
     z-index: 1;
 }
@@ -83,7 +115,7 @@
 }
 
 .selected {
-    border: 2px solid #007bff; /* Example border color */
-    border-radius: 50%; /* Makes a circle */
+    border: 2px solid #007bff;
+    /* background-color: beige; */
+    border-radius: 50%;
 }
-
