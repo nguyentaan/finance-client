@@ -63,6 +63,7 @@
   },
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^6.0.2",
+    "@svgr/webpack": "^8.1.0",
     "@types/sinonjs__fake-timers": "^8.1.5",
     "@types/sizzle": "^2.3.8",
     "add": "^2.0.6",

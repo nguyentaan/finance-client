@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 import React, { useState } from 'react';
 import {
     format,
@@ -16,7 +17,7 @@ import classNames from 'classnames/bind';
 
 const cx = classNames.bind(styles);
 
-const Calendar = () => {
+const Calendar = ({ transactions }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const nextMonth = () => {
@@ -57,51 +58,59 @@ const Calendar = () => {
         return <div className={cx('calendar-days')}>{days}</div>;
     };
 
-const renderCells = () => {
-    const monthStart = startOfMonth(currentDate);
-    const monthEnd = endOfMonth(monthStart);
-    const startDate = startOfWeek(monthStart);
-    const endDate = endOfWeek(monthEnd);
+    const renderCells = () => {
+        const monthStart = startOfMonth(currentDate);
+        const monthEnd = endOfMonth(monthStart);
+        const startDate = startOfWeek(monthStart);
+        const endDate = endOfWeek(monthEnd);
 
-    const dateFormat = 'd';
-    const rows = [];
+        const dateFormat = 'd';
+        const rows = [];
 
-    let day = startDate;
+        let day = startDate;
 
-    while (day <= endDate) {
-        let days = [];
+        while (day <= endDate) {
+            let days = [];
 
-        for (let i = 0; i < 7; i++) {
-            const formattedDate = format(day, dateFormat);
-            const cloneDay = day;
+            for (let i = 0; i < 7; i++) {
+                const formattedDate = format(day, dateFormat);
+                const cloneDay = day;
 
-            days.push(
-                <div
-                    className={cx('calendar-cell', {
-                        disabled: !isSameMonth(day, monthStart),
-                        selected: isSameDay(day, new Date()),
-                    })}
-                    key={formattedDate}
-                    onClick={() => onDateClick(cloneDay)}
-                >
-                    <span className={cx('number')}>{formattedDate}</span>
-                    {/* <span className={cx('bg')}>{formattedDate}</span> */}
+                const transactionsOnDate = transactions.filter((transaction) =>
+                    isSameDay(new Date(transaction.date), day),
+                );
+
+                const hasIncome = transactionsOnDate.some((transaction) => transaction.type === 'Income');
+                const hasExpense = transactionsOnDate.some((transaction) => transaction.type === 'Expense');
+
+                days.push(
+                    <div
+                        className={cx('calendar-cell', {
+                            disabled: !isSameMonth(day, monthStart),
+                            selected: isSameDay(day, new Date()),
+                            income: hasIncome && !hasExpense,
+                            expense: hasExpense && !hasIncome,
+                            both: hasIncome && hasExpense,
+                        })}
+                        key={formattedDate}
+                        onClick={() => onDateClick(cloneDay)}
+                    >
+                        <span className={cx('number')}>{formattedDate}</span>
+                    </div>,
+                );
+
+                day = addDays(day, 1);
+            }
+
+            rows.push(
+                <div className={cx('calendar-row')} key={day}>
+                    {days}
                 </div>,
             );
-
-            day = addDays(day, 1);
         }
 
-        rows.push(
-            <div className={cx('calendar-row')} key={day}>
-                {days}
-            </div>,
-        );
-    }
-
-    return <div className={cx('calendar-body')}>{rows}</div>;
-};
-
+        return <div className={cx('calendar-body')}>{rows}</div>;
+    };
 
     const onDateClick = (day) => {
         console.log('Selected Date:', day);
