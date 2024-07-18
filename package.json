@@ -11,7 +11,6 @@
     "@mui/material": "^5.16.0",
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.2.6",
-    "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "assert": "^2.1.0",
@@ -64,14 +63,18 @@
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^6.0.2",
     "@svgr/webpack": "^8.1.0",
+    "@testing-library/jest-dom": "^6.4.6",
     "@types/sinonjs__fake-timers": "^8.1.5",
     "@types/sizzle": "^2.3.8",
+    "@vitest/ui": "^2.0.3",
     "add": "^2.0.6",
     "babel-plugin-module-resolver": "^5.0.0",
     "customize-cra": "^1.0.0",
     "cypress": "^13.13.0",
+    "jsdom": "^24.1.0",
     "react-app-rewired": "^2.2.1",
     "sass": "^1.69.5",
+    "vitest": "^2.0.3",
     "webpack": "^5.93.0"
   }
 }
