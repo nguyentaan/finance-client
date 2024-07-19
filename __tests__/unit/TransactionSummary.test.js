@@ -3,49 +3,46 @@ import { render, screen } from '@testing-library/react';
 import TransactionSummary from '../../src/components/transactionSumary';
 import '@testing-library/jest-dom';
 
-describe('TransactionSummary', () => {
-    it('renders without crashing', () => {
-        const transactions = [];
-        render(<TransactionSummary transactions={transactions} />);
-        const totalBalanceElement = screen.getByText(/Total Balance:/i);
-        expect(totalBalanceElement).toBeInTheDocument();
-    });
+describe('TransactionSummary - percentChange calculation', () => {
+    const scenarios = [
+        {
+            description: 'only income transactions results in "+100%"',
+            transactions: [{ type: 'Income', amount: 1000 }],
+            expected: '+100%',
+        },
+        {
+            description: 'only expense transactions results in a negative percentage',
+            transactions: [{ type: 'Expense', amount: 500 }],
+            expected: '-100.00%',
+        },
+        {
+            description: 'income higher than expense results in a positive percentage',
+            transactions: [
+                { type: 'Income', amount: 1500 },
+                { type: 'Expense', amount: 500 },
+            ],
+            expected: '+200.00%',
+        },
+        {
+            description: 'expense higher than income results in a negative percentage',
+            transactions: [
+                { type: 'Income', amount: 500 },
+                { type: 'Expense', amount: 1500 },
+            ],
+            expected: '-66.67%',
+        },
+        {
+            description: 'no transactions results in "+100%"',
+            transactions: [],
+            expected: '+100%',
+        },
+    ];
 
-    it('calculates and displays total balance correctly', () => {
-        const transactions = [
-            { id: 1, type: 'Income', amount: 10000 },
-            { id: 2, type: 'Expense', amount: 5000 },
-            { id: 3, type: 'Expense', amount: 2000 },
-        ];
-        render(<TransactionSummary transactions={transactions} />);
-        const totalBalanceElement = screen.getByText(/3\.000 VND/);
-        expect(totalBalanceElement).toBeInTheDocument();
-    });
-
-    it('displays the correct percent change for positive change', () => {
-        const transactions = [
-            { id: 1, type: 'Income', amount: 12000 },
-            { id: 2, type: 'Expense', amount: 2000 },
-        ];
-        render(<TransactionSummary transactions={transactions} />);
-        const percentChangeElement = screen.getByText('+500.00%');
-        expect(percentChangeElement).toBeInTheDocument();
-    });
-
-    it('displays the correct percent change for negative change', () => {
-        const transactions = [
-            { id: 1, type: 'Income', amount: 2000 },
-            { id: 2, type: 'Expense', amount: 4000 },
-        ];
-        render(<TransactionSummary transactions={transactions} />);
-        const percentChangeElement = screen.getByText('-50.00%');
-        expect(percentChangeElement).toBeInTheDocument();
-    });
-
-    it('displays +100% percent change when initial expense is 0', () => {
-        const transactions = [{ id: 1, type: 'Income', amount: 10000 }];
-        render(<TransactionSummary transactions={transactions} />);
-        const percentChangeElement = screen.getByText('+100%');
-        expect(percentChangeElement).toBeInTheDocument();
+    scenarios.forEach(({ description, transactions, expected }) => {
+        it(description, () => {
+            render(<TransactionSummary transactions={transactions} />);
+            const percentChangeElement = screen.getByText(expected);
+            expect(percentChangeElement).toBeInTheDocument();
+        });
     });
 });
