@@ -1,9 +1,9 @@
-import { setupWorker } from 'msw/browser';
-// import { setupServer } from 'msw/node';
+// import { setupWorker } from 'msw/browser';
+import { setupServer } from 'msw/node';
 import { handlers } from './handlers';
 
-// export const server = setupServer(...handlers);
-export const server = setupWorker(...handlers);
+export const server = setupServer(...handlers);
+// export const server = setupWorker(...handlers);
 
 // Start and stop the server in the appropriate lifecycle methods
 if (typeof window === 'undefined') {

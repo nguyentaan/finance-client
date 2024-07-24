@@ -4,10 +4,10 @@ import App from './App';
 import GlobalStyles from '~/components/GlobalStyles';
 import store from './reducers/store';
 import { Provider } from 'react-redux';
-import { server } from './mocks/server';
+import { worker } from './mocks/browser';
 
 if (process.env.NODE_ENV === 'development') {
-    server.start();
+      worker.start();
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
