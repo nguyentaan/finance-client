@@ -162,7 +162,7 @@ function Home() {
                     <div className={cx('left-side-content')}>
                         {transactions.length === 0 ? (
                             <div className={cx('no-transaction')}>
-                                <p className="chart-title">Transaction History</p>
+                                <p className="chart-title">There is no transaction history</p>
                                 <img src={LineChartIcon} alt="Line Chart" />
                             </div>
                         ) : (
@@ -196,12 +196,12 @@ function Home() {
                 </div>
                 <div className={cx('right-side')}>
                     <div className={cx('right-side-content')}>
-                        <Calendar transactions={transactions}/>
+                        <Calendar transactions={transactions} />
                     </div>
                     <div className={cx('right-side-content')}>
                         {transactions.length === 0 ? (
                             <div className={cx('no-transaction')}>
-                                <p className="chart-title">Transaction Summary</p>
+                                <p className="chart-title">There is no transaction history</p>
                                 <img src={DonutChartIcon} alt="Donut Chart" />
                             </div>
                         ) : (

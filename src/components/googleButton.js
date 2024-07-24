@@ -4,33 +4,49 @@ import { useDispatch } from 'react-redux';
 // import { googleSignIn } from '~/actions/authAction';
 import { googleSignIn } from '~/reducers/authSlice';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const CLIENT_ID = '949928109687-ualg36c3l1v73dtqmudotboi79f7pvds.apps.googleusercontent.com';
 
-const GoogleButton = () => {
+const GoogleButton = ({ onSuccessSnackbar, onErrorSnackbar }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const onSuccess = async (response) => {
-        console.log('Login Success:', response);
         try {
-            const signInResponse = await dispatch(googleSignIn(response.credential));
-            console.log('Sign-in Response:', signInResponse);
+            const actionResult = await dispatch(googleSignIn(response.credential));
+            console.log('Action Result:', actionResult);
+            const { meta, payload } = actionResult;
 
-            if (signInResponse && signInResponse.payload.message === 'Google sign-in successful') {
-                navigate('/dashboard');
-            } else {
-                console.error('Sign-in not successful:', signInResponse && signInResponse.message);
-                // Handle other conditions or errors if needed
+            if (meta.requestStatus === 'fulfilled') {
+                if (onSuccessSnackbar) {
+                    // console.log('Success Snackbar:', 'Google sign-in successful');
+                    onSuccessSnackbar('Google sign-in successful');
+                }
+                setTimeout(() => {
+                    navigate('/dashboard');
+                }, 1000);
+            } else if (meta.requestStatus === 'rejected') {
+                if (onErrorSnackbar) {
+                    // console.log('Error Snackbar:', payload || 'Sign-in not successful');
+                    onErrorSnackbar(payload || 'Sign-in not successful');
+                }
+                console.error('Sign-in not successful:', payload);
             }
         } catch (err) {
             console.error('API Error:', err);
-            // Handle dispatch error or other API errors
+            if (onErrorSnackbar) {
+                // console.log('Error Snackbar:', 'API error occurred');
+                onErrorSnackbar('API error occurred');
+            }
         }
     };
 
     const onFailure = (response) => {
         console.log('Login Failed:', response);
+        if (onErrorSnackbar) {
+            onErrorSnackbar('Google login failed');
+        }
     };
 
     return (
@@ -46,6 +62,16 @@ const GoogleButton = () => {
             </div>
         </GoogleOAuthProvider>
     );
+};
+
+GoogleButton.propTypes = {
+    onSuccessSnackbar: PropTypes.func,
+    onErrorSnackbar: PropTypes.func,
+};
+
+GoogleButton.defaultProps = {
+    onSuccessSnackbar: () => {},
+    onErrorSnackbar: () => {},
 };
 
 export default GoogleButton;

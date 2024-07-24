@@ -81,6 +81,7 @@ const config = {
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     moduleNameMapper: {
+        '\\.(jpg|jpeg|png|gif|svg|ico)$': '<rootDir>/src/mocks/fileMock.js',
         '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     },
 
@@ -126,11 +127,10 @@ const config = {
     // runner: "jest-runner",
 
     // The paths to modules that run some code to configure or set up the testing environment before each test
-    // setupFiles: [],
+    setupFiles: ['<rootDir>/jest.polyfills.js'],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
-    // setupFilesAfterEnv: [],
-
+    setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'],
     // The number of seconds after which a test is considered as slow and reported as such in the results.
     // slowTestThreshold: 5,
 
@@ -141,8 +141,9 @@ const config = {
     testEnvironment: 'jsdom',
 
     // Options that will be passed to the testEnvironment
-    // testEnvironmentOptions: {},
-
+    testEnvironmentOptions: {
+        customExportConditions: [''],
+    },
     // Adds a location field to test results
     // testLocationInResults: false,
 
