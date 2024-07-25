@@ -37,26 +37,24 @@ function Header() {
 
     const handleOpen = () => {
         dispatch(toggleIsOpen());
-    }
+    };
 
     return (
         <header className={cx('header-container')}>
             <h2>My Money</h2>
-            {user ? (
-                <>
-                    <div className={cx('group-actions')}>
-                        <button className={cx('button-action')} onClick={handleOpen}>
-                            <p className={cx('icon-action')}><FontAwesomeIcon icon={faAdd} size="1x" /></p>
-                            <p>Add transaction</p>
-                        </button>
-                        <button onClick={handleSignOut}>
-                            <FontAwesomeIcon icon={faRightFromBracket} size="2x" />
-                        </button>
-                    </div>
-                </>
-            ) : (
-                <span>Not signed in</span>
-            )}
+
+            <div className={cx('group-actions')}>
+                <button className={cx('button-action')} onClick={handleOpen} data-testid="add-button">
+                    <p className={cx('icon-action')}>
+                        <FontAwesomeIcon icon={faAdd} size="1x" />
+                    </p>
+                    <p>Add transaction</p>
+                </button>
+                <button onClick={handleSignOut} data-testid="signout-button">
+                    <FontAwesomeIcon icon={faRightFromBracket} size="2x" />
+                </button>
+            </div>
+            {/* <span>Not signed in</span> */}
         </header>
     );
 }

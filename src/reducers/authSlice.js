@@ -12,10 +12,10 @@ export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId
                 tokenId,
             },
         );
-        console.log('Google Sign-In Response:', res.data);
+        // console.log('Google Sign-In Response:', res.data);
 
         if (res.data && res.data.message === 'Google sign-in successful') {
-            console.log('Google Sign-In Successful:', res);
+            // console.log('Google Sign-In Successful:', res);
             localStorage.setItem('user', JSON.stringify(res.data.user));
             return res.data;
         } else {
@@ -63,13 +63,13 @@ export const fetchUserData = createAsyncThunk('auth/fetchUserData', async (_, { 
 
 export const register = createAsyncThunk('auth/register', async ({ email, password }, { rejectWithValue }) => {
     try {
-        console.log('Register Payload:', { email, password });
+        // console.log('Register Payload:', { email, password });
         // const res = await axios.post('https://personal-finacne-tracking.azurewebsites.net/register',
         const res = await axios.post('http://localhost:5215/register', {
             email,
             password,
         });
-        console.log('Register Response:', res.data);
+        // console.log('Register Response:', res.data);
 
         return res.data;
     } catch (error) {

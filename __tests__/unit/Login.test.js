@@ -2,12 +2,20 @@ import React from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '../../utils/test-utils';
 import Login from '../../src/pages/Login/Login';
-import { BrowserRouter as Router, MemoryRouter } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import CustomSnackbar from '../../src/components/snackbar/snackbar';
-// import { server } from "../../src/mocks/server";
-// import { rest } from "msw";
+
 
 describe('Login', () => {
+    test('render google login button', async () => {
+        renderWithProviders(
+            <Router>
+                <Login />
+            </Router>,
+        );
+        const googleButton = screen.getByTestId('google-button');
+        expect(googleButton).toBeInTheDocument();
+    })
     test('render login form', async () => {
         renderWithProviders(
             <Router>
@@ -38,11 +46,9 @@ describe('Login', () => {
 
     test('should successfully login', async () => {
         renderWithProviders(
-            // <Router>
-            <MemoryRouter initialEntries={['/']}>
+            <Router>
                 <Login />
-            </MemoryRouter>,
-            // </Router>,
+            </Router>,
         );
         fireEvent.change(screen.getByPlaceholderText('Email'), {
             target: { value: 'test@example.com' },
@@ -62,9 +68,9 @@ describe('Login', () => {
 
     test('shoudl fail to login', async () => {
         renderWithProviders(
-            <MemoryRouter initialEntries={['/']}>
+            <Router>
                 <Login />
-            </MemoryRouter>,
+            </Router>,
         );
         fireEvent.change(screen.getByPlaceholderText('Email'), {
             target: { value: 'test@example.com' },

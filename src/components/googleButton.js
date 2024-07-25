@@ -51,7 +51,7 @@ const GoogleButton = ({ onSuccessSnackbar, onErrorSnackbar }) => {
 
     return (
         <GoogleOAuthProvider clientId={CLIENT_ID}>
-            <div>
+            <div data-testid="google-button-component">
                 <GoogleLogin
                     onSuccess={onSuccess}
                     onFailure={onFailure}
