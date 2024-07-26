@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 // import { signOut } from '~/actions/authAction';
 import { signOut } from '~/reducers/authSlice';
@@ -12,7 +12,7 @@ import { toggleIsOpen } from '~/reducers/homeSlice';
 const cx = classNames.bind(styles);
 
 function Header() {
-    const [user, setUser] = useState(true);
+    // const [user, setUser] = useState(true);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -21,17 +21,17 @@ function Header() {
     // console.log('IsOpen:', isOpen);
     // console.log('User:', user1);
 
-    useEffect(() => {
-        const userData = localStorage.getItem('user');
-        if (userData) {
-            setUser(JSON.parse(userData));
-        }
-    }, []);
+    // useEffect(() => {
+    //     const userData = localStorage.getItem('user');
+    //     // if (userData) {
+    //     //     setUser(JSON.parse(userData));
+    //     // }
+    // }, []);
 
     const handleSignOut = () => {
         dispatch(signOut());
         localStorage.removeItem('user');
-        setUser(null);
+        // setUser(null);
         navigate('/');
     };
 
