@@ -12,6 +12,7 @@ module.exports = {
             assert: require.resolve('assert/'),
             url: require.resolve('url/'),
             msw: require.resolve('msw'),
+            React: require.resolve('react'),
         },
     },
 };

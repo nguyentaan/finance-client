@@ -11,7 +11,11 @@ export const createTransaction = createAsyncThunk(
     'transaction/createTransaction',
     async (transactionData, { rejectWithValue }) => {
         try {
-            const response = await axios.post('http://localhost:5215/api/Transaction/create', transactionData);
+            const response = await axios.post(
+                'https://personal-finacne-tracking.azurewebsites.net/api/Transaction/create',
+                // const response = await axios.post('https://localhost:7086/api/Transaction/create',
+                transactionData,
+            );
             console.log('Transaction Response:', response);
             return {
                 data: response.data,
@@ -31,8 +35,13 @@ export const createTransaction = createAsyncThunk(
 export const fetchTransactionsByEmail = createAsyncThunk(
     'transaction/fetchByEmail',
     async (email) => {
+        // const response = await axios.get(
+        //     `https://localhost:7086/api/Transaction/byemail?email=${encodeURIComponent(email)}`,
+        // );        
         const response = await axios.get(
-            `http://localhost:5215/api/Transaction/byemail?email=${encodeURIComponent(email)}`,
+            `https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail?email=${encodeURIComponent(
+                email,
+            )}`,
         );
         return response.data;
     }

@@ -51,9 +51,9 @@ export const handlers = [
         );
     }),
 
-    http.post('http://localhost:5215/api/Auth/google-signin',(req,res,ctx) => {
-        const {tokenId} = req.body;
-        if(tokenId === 'google-token'){
+    http.post('http://localhost:5215/api/Auth/google-signin', (req, res, ctx) => {
+        const { tokenId } = req.body;
+        if (tokenId === 'google-token') {
             sessionUser = mockUser;
             return res(
                 ctx.status(200),
@@ -69,5 +69,27 @@ export const handlers = [
                 message: 'Invalid Google token',
             }),
         );
+    }),
+
+    http.post('http://localhost:5215/register', (req,res,ctx) => {
+        const { email, password } = req.body;
+        if (email && password) {
+            sessionUser = mockUser;
+            return res(
+                ctx.status(200),
+                ctx.json({
+                    id:'123',
+                    message: 'Registration successful',
+                    email,
+                }),
+            );
+        } else {
+            return res(
+                ctx.status(400),
+                ctx.json({
+                    message: 'Registration failed',
+                }),
+            );
+        }
     }),
 ];

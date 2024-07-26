@@ -3,19 +3,16 @@ import axios from 'axios';
 
 export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId, { rejectWithValue }) => {
     try {
-        // const res = await axios.post(
-        // 'https://localhost:7086/api/Auth/google-signin',
-        const res = await axios.post(
-            'http://localhost:5215/api/Auth/google-signin',
-            // const res = await axios.post('https://personal-finacne-tracking.azurewebsites.net/api/Auth/google-signin',
-            {
-                tokenId,
-            },
-        );
-        console.log('Google Sign-In Response:', res.data);
+        // const res = await axios.post('https://localhost:7086/api/Auth/google-signin',
+            // const res = await axios.post('http://localhost:5215/api/Auth/google-signin',
+            const res = await axios.post('https://personal-finacne-tracking.azurewebsites.net/api/Auth/google-signin',
+        {
+            tokenId,
+        });
+        // console.log('Google Sign-In Response:', res.data);
 
         if (res.data && res.data.message === 'Google sign-in successful') {
-            console.log('Google Sign-In Successful:', res);
+            // console.log('Google Sign-In Successful:', res);
             localStorage.setItem('user', JSON.stringify(res.data.user));
             return res.data;
         } else {
@@ -29,9 +26,8 @@ export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId
 export const login = createAsyncThunk('auth/login', async ({ email, password }, { dispatch }) => {
     try {
         // console.log('Login Payload:', { email, password });
-        // await axios.post('https://personal-finacne-tracking.azurewebsites.net/login?useCookies=true&useSessionCookies=true',
-        await axios.post(
-            'http://localhost:5215/login?useCookies=true&useSessionCookies=true',
+        const res = await axios.post('https://personal-finacne-tracking.azurewebsites.net/login?useCookies=true&useSessionCookies=true',
+        // await axios.post('https://localhost:7086/login?useCookies=true&useSessionCookies=true',
             {
                 email,
                 password,
@@ -40,6 +36,7 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
                 withCredentials: true,
             },
         );
+        console.log('Login Response:', res);
         const output = await dispatch(fetchUserData());
         localStorage.setItem('user', JSON.stringify(output.payload));
         return output.payload;
@@ -50,8 +47,9 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
 
 export const fetchUserData = createAsyncThunk('auth/fetchUserData', async (_, { rejectWithValue }) => {
     try {
-        // const res = await axios.get('https://personal-finacne-tracking.azurewebsites.net/users/me',
-        const res = await axios.get('http://localhost:5215/users/me', {
+        const res = await axios.get('https://personal-finacne-tracking.azurewebsites.net/users/me',
+        // const res = await axios.get('https://localhost:7086/users/me', 
+        {
             withCredentials: true,
         });
         // localStorage.setItem('user', JSON.stringify(res.data));
@@ -63,13 +61,14 @@ export const fetchUserData = createAsyncThunk('auth/fetchUserData', async (_, { 
 
 export const register = createAsyncThunk('auth/register', async ({ email, password }, { rejectWithValue }) => {
     try {
-        console.log('Register Payload:', { email, password });
-        // const res = await axios.post('https://personal-finacne-tracking.azurewebsites.net/register',
-        const res = await axios.post('http://localhost:5215/register', {
+        // console.log('Register Payload:', { email, password });
+        const res = await axios.post('https://personal-finacne-tracking.azurewebsites.net/register',
+        // const res = await axios.post('http://localhost:5215/register', 
+        {
             email,
             password,
         });
-        console.log('Register Response:', res.data);
+        // console.log('Register Response:', res.data);
 
         return res.data;
     } catch (error) {

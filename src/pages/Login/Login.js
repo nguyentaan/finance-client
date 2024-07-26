@@ -26,21 +26,15 @@ const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isLoading = useSelector((state) => state.auth.loading);
-    // const isLoading = true;
-    // const isLoading = false;
+
 
     const validateForm = () => {
         const newErrors = {};
-        // let isValid = true;
         if (!email) {
-            // setError('Please enter your email');
             newErrors.email = 'Please enter your email';
-            // isValid = false;
         }
         if (!password) {
             newErrors.password = 'Please enter your email';
-            // setError('Please enter your password');
-            // isValid = false;
         }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -50,11 +44,8 @@ const Login = () => {
         if (validateForm()) {
             try {
                 const payload = { email, password };
-                // console.log('Login Payload:', payload); // Additional logging
                 const response = await dispatch(login(payload));
-                // console.log('Login Response:', response);
-                // console.log('status code:', response.payload.status);
-                console.log('Login Response:', response.meta.requestStatus);
+                // console.log('Login Response:', response.meta.requestStatus);
                 if (response.meta.requestStatus === 'fulfilled') {
                     setSuccessMessage('Login successful');
                     setSnackbarType('success');
@@ -90,7 +81,7 @@ const Login = () => {
         }
         setSnackbarType(type);
         setShowSnackbar(true);
-        console.log('Snackbar:', message);
+        // console.log('Snackbar:', message);
     };
 
     const handleSnackbarClose = () => {
@@ -123,10 +114,12 @@ const Login = () => {
                             <h1>Login to Your Account</h1>
                             <span>See what is going on with your business</span>
                         </div>
-                        <GoogleButton
-                            onSuccessSnackbar={(message) => handleSnackbarOpen(message, 'success')}
-                            onErrorSnackbar={(message) => handleSnackbarOpen(message, 'error')}
-                        />
+                        <div data-testid="google-button">
+                            <GoogleButton
+                                onSuccessSnackbar={(message) => handleSnackbarOpen(message, 'success')}
+                                onErrorSnackbar={(message) => handleSnackbarOpen(message, 'error')}
+                            />
+                        </div>
                     </div>
                     <div className={cx('content-form')}>
                         <span className={cx('or')}>------------- or Sign in with Email -------------</span>
@@ -177,7 +170,9 @@ const Login = () => {
                             </div>
                             <div className={cx('button', 'color-button')}>
                                 {isLoading ? (
-                                    <Loading />
+                                    <div data-testid="loading">
+                                        <Loading />
+                                    </div>
                                 ) : (
                                     <input type="submit" value={'Sign in'} disabled={isLoading} />
                                 )}
