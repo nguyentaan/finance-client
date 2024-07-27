@@ -81,7 +81,6 @@
     "@types/sinonjs__fake-timers": "^8.1.5",
     "@types/sizzle": "^2.3.8",
     "add": "^2.0.6",
-    "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "core-js": "^3.37.1",
     "customize-cra": "^1.0.0",
