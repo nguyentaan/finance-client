@@ -184,8 +184,8 @@ function Home() {
                                                 <p>{formatDate(transaction.date)}</p>
                                             </div>
                                             <p style={{ color: transaction.type === 'Income' ? '#20C997' : '#E74C3C' }}>
-                                                {/* {transaction.amount} VND */}
-                                                {transaction.amount.toLocaleString()} VND
+                                                {transaction.amount} VND
+                                                {/* {transaction.amount.toLocaleString()} VND */}
                                             </p>
                                         </div>
                                     ))}

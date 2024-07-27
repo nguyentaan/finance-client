@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+// import axios from 'axios';
+import instance from '~/axios/axiosInstance';
 
 const initialState = {
     transactions: [],
@@ -7,11 +8,13 @@ const initialState = {
     error: null,
 };
 
+// axios.defaults.withCredentials = true;
+
 export const createTransaction = createAsyncThunk(
     'transaction/createTransaction',
     async (transactionData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(
+            const response = await instance.post(
                 'https://personal-finacne-tracking.azurewebsites.net/api/Transaction/create',
                 // const response = await axios.post('https://localhost:7086/api/Transaction/create',
                 transactionData,
@@ -38,11 +41,11 @@ export const fetchTransactionsByEmail = createAsyncThunk(
         // const response = await axios.get(
         //     `https://localhost:7086/api/Transaction/byemail?email=${encodeURIComponent(email)}`,
         // );        
-        const response = await axios.get(
-            `https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail?email=${encodeURIComponent(
-                email,
-            )}`,
-        );
+            const response = await instance.get(
+                `https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail?email=${encodeURIComponent(
+                    email,
+                )}`,
+            );
         return response.data;
     }
 );

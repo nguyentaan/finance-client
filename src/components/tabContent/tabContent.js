@@ -30,7 +30,7 @@ const TabContent = () => {
     };
 
     // console.log('User:', user.user.email);
-    const { loading, error } = useSelector((state) => state.transactions);
+    const { loading } = useSelector((state) => state.transactions);
     // const loading = true;
     const [formData, setFormData] = useState({
         name: '',
@@ -148,7 +148,7 @@ const TabContent = () => {
                     <button className={cx('submit-button')} type="submit">
                         {loading ? <Loading /> : 'Add transaction'}
                     </button>
-                    {error && <p className={cx('error')}>{error}</p>}
+                    {/* {error && <p className={cx('error')}>{error}</p>} */}
                 </form>
             </div>
         </div>

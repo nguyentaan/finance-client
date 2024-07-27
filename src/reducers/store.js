@@ -4,6 +4,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
 import transactionReducer from './transSlice';
 import isOpenSiceRecuder from './homeSlice';
+import axiosInterceptor from '~/axios/axiosInterceptor';
 
 const store = configureStore({
     reducer: {
@@ -12,5 +13,7 @@ const store = configureStore({
         isOpen: isOpenSiceRecuder,
     },
 });
+
+axiosInterceptor(store);
 
 export default store;

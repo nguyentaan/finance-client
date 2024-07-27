@@ -10,6 +10,8 @@ import { Provider } from 'react-redux';
 //       worker.start();
 // }
 
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
