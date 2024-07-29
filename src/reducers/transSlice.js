@@ -14,12 +14,8 @@ export const createTransaction = createAsyncThunk(
     'transaction/createTransaction',
     async (transactionData, { rejectWithValue }) => {
         try {
-            const response = await instance.post(
-                'https://personal-finacne-tracking.azurewebsites.net/api/Transaction/create',
-                // const response = await axios.post('https://localhost:7086/api/Transaction/create',
-                transactionData,
-            );
-            console.log('Transaction Response:', response);
+            // const response = await instance.post('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/create',
+                const response = await instance.post('https://localhost:7086/api/Transaction/create', transactionData);
             return {
                 data: response.data,
                 status: response.status,
@@ -35,23 +31,20 @@ export const createTransaction = createAsyncThunk(
     },
 );
 
-export const fetchTransactionsByEmail = createAsyncThunk(
-    'transaction/fetchByEmail',
-    async (email) => {
-        // const response = await axios.get(
-        //     `https://localhost:7086/api/Transaction/byemail?email=${encodeURIComponent(email)}`,
-        // );        
-            const response = await instance.get(
-                `https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail?email=${encodeURIComponent(
-                    email,
-                )}`,
-            );
-        return response.data;
-    }
-);
+export const fetchTransactionsByEmail = createAsyncThunk('transaction/fetchByEmail', async (email) => {
+    const response = await instance.get(
+        `https://localhost:7086/api/Transaction/byemail?email=${encodeURIComponent(email)}`,
+    );
+    // const response = await instance.get(
+    //     `https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail?email=${encodeURIComponent(
+    //         email,
+    //     )}`,
+    // );
+    return response.data;
+});
 
 const transactionSlice = createSlice({
-    name: 'transaction',
+    name: 'transactions',
     initialState,
     reducers: {},
     extraReducers: (builder) => {

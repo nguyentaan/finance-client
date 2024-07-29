@@ -14,7 +14,6 @@ const GoogleButton = ({ onSuccessSnackbar, onErrorSnackbar }) => {
     const onSuccess = async (response) => {
         try {
             const actionResult = await dispatch(googleSignIn(response.credential));
-            console.log('Action Result:', actionResult);
             const { meta, payload } = actionResult;
 
             if (meta.requestStatus === 'fulfilled') {
@@ -28,10 +27,8 @@ const GoogleButton = ({ onSuccessSnackbar, onErrorSnackbar }) => {
                 if (onErrorSnackbar) {
                     onErrorSnackbar(payload || 'Sign-in not successful');
                 }
-                console.error('Sign-in not successful:', payload);
             }
         } catch (err) {
-            console.error('API Error:', err);
             if (onErrorSnackbar) {
                 onErrorSnackbar('API error occurred');
             }
@@ -39,7 +36,6 @@ const GoogleButton = ({ onSuccessSnackbar, onErrorSnackbar }) => {
     };
 
     const onFailure = (response) => {
-        console.log('Login Failed:', response);
         if (onErrorSnackbar) {
             onErrorSnackbar('Google login failed');
         }
@@ -65,9 +61,9 @@ GoogleButton.propTypes = {
     onErrorSnackbar: PropTypes.func,
 };
 
-GoogleButton.defaultProps = {
-    onSuccessSnackbar: () => {},
-    onErrorSnackbar: () => {},
-};
+// GoogleButton.defaultProps = {
+//     onSuccessSnackbar: () => {},
+//     onErrorSnackbar: () => {},
+// };
 
 export default GoogleButton;

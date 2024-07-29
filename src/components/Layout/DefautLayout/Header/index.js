@@ -1,6 +1,5 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-// import { signOut } from '~/actions/authAction';
 import { signOut } from '~/reducers/authSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightFromBracket, faAdd } from '@fortawesome/free-solid-svg-icons';
@@ -8,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './header.module.css'; // Import your CSS file
 import classNames from 'classnames/bind';
 import { toggleIsOpen } from '~/reducers/homeSlice';
+import CurrencySelector from '~/components/currencySelector/CurrencySelector';
 
 const cx = classNames.bind(styles);
 
@@ -44,6 +44,9 @@ function Header() {
             <h2>My Money</h2>
 
             <div className={cx('group-actions')}>
+                <div>
+                    <CurrencySelector />
+                </div>
                 <button className={cx('button-action')} onClick={handleOpen} data-testid="add-button">
                     <p className={cx('icon-action')}>
                         <FontAwesomeIcon icon={faAdd} size="1x" />

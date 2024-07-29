@@ -5,7 +5,7 @@ import styles from './tabContent.module.css';
 import { toggleIsOpen } from '~/reducers/homeSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { createTransaction } from '~/reducers/transSlice';
+import { createTransaction, fetchTransactionsByEmail } from '~/reducers/transSlice';
 import { useState } from 'react';
 import Loading from '~/components/Layout/DefautLayout/loading/loading';
 
@@ -16,6 +16,7 @@ const TabContent = () => {
     const isOpen = useSelector((state) => state.isOpen.isOpen);
     const user = useSelector((state) => state.auth);
     const [selectedOption, setSelectedOption] = React.useState('...');
+    const userEmail = user.user.email;
 
     const handleSelect = (option) => {
         setSelectedOption(option);
@@ -53,6 +54,7 @@ const TabContent = () => {
         const res = await dispatch(createTransaction(formData));
         if (res.meta.requestStatus === 'fulfilled') {
             console.log('Transaction created successfully:', res.payload);
+            await dispatch(fetchTransactionsByEmail(userEmail));
             handleCloseTab();
         } else {
             console.log('Error creating transaction:', res.error.message);
@@ -90,7 +92,7 @@ const TabContent = () => {
                                                 onChange={() => handleSelect(option)}
                                             />
                                             <label className={cx('option')} htmlFor={option} data-txt={option}>
-                                                {option}
+                                                {/* {option} */}
                                             </label>
                                         </div>
                                     ))}
