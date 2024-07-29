@@ -6,7 +6,7 @@ export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId
     try {
         // console.log('Google Sign-In Payload:', tokenId);
         // const res = await axios.post('https://localhost:7086/api/Auth/google-signin',
-            // const res = await axios.post('http://localhost:5215/api/Auth/google-signin',
+        // const res = await axios.post('http://localhost:5215/api/Auth/google-signin',
         const res = await instance.post(
             'https://personal-finacne-tracking.azurewebsites.net/api/Auth/google-signin',
             {
@@ -38,18 +38,18 @@ export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId
 export const login = createAsyncThunk('auth/login', async ({ email, password }, { dispatch }) => {
     try {
         // console.log('Login Payload:', { email, password });
-        const res = await instance.post(
-            'https://personal-finacne-tracking.azurewebsites.net/login?useCookies=true&useSessionCookies=true',
-            // await axios.post('https://localhost:7086/login?useCookies=true&useSessionCookies=true',
+        // const res = await instance.post('https://personal-finacne-tracking.azurewebsites.net/login?useCookies=true&useSessionCookies=true',
+        await instance.post(
+            'https://localhost:7086/login?useCookies=true&useSessionCookies=true',
             {
                 email,
                 password,
             },
-            // {
-            //     withCredentials: true,
-            // },
+            {
+                withCredentials: true,
+            },
         );
-        console.log('Login Response:', res);
+        // console.log('Login Response:', res);
         const output = await dispatch(fetchUserData());
         localStorage.setItem('user', JSON.stringify(output.payload));
         return output.payload;
@@ -60,13 +60,10 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
 
 export const fetchUserData = createAsyncThunk('auth/fetchUserData', async (_, { rejectWithValue }) => {
     try {
-        const res = await instance.get(
-            'https://personal-finacne-tracking.azurewebsites.net/users/me',
-            // const res = await axios.get('https://localhost:7086/users/me',
-            // {
-            //     withCredentials: true,
-            // },
-        );
+        // const res = await instance.get('https://personal-finacne-tracking.azurewebsites.net/users/me',
+        const res = await instance.get('https://localhost:7086/users/me', {
+            withCredentials: true,
+        });
         // localStorage.setItem('user', JSON.stringify(res.data));
         return res.data;
     } catch (err) {

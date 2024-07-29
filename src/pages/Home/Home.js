@@ -1,9 +1,9 @@
 import styles from './home.module.css';
+import React from 'react';
 import classNames from 'classnames/bind';
 import LineChart from '~/components/charts/LineChart';
 import DoughnutChart from '~/components/charts/DoughnutChart';
 import Calendar from '~/components/calendar/Calendar';
-// import { toggleIsOpen } from '~/reducers/homeSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import TabContent from '~/components/tabContent/tabContent';
 import { fetchTransactionsByEmail } from '~/reducers/transSlice';
@@ -34,7 +34,7 @@ const doughnutChartOptions = {
 function Home() {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth);
-    const transactions = useSelector((state) => state.transactions.transactions);
+    const transactions = useSelector((state) => state.transactions.transactions || []);
     const [selectedFilter, setSelectedFilter] = useState('Both');
     // const { loading, error } = useSelector((state) => state.transactions);
     const userEmail = user.user.email;
@@ -166,7 +166,9 @@ function Home() {
                                 <img src={LineChartIcon} alt="Line Chart" />
                             </div>
                         ) : (
-                            <LineChart data={lineChartData} options={lineChartOptions} />
+                            <div data-testid="line-chart">
+                                <LineChart data={lineChartData} options={lineChartOptions} />
+                            </div>
                         )}
                     </div>
                     <div className={cx('left-side-content')}>
@@ -175,7 +177,7 @@ function Home() {
                             {transactions.length === 0 ? (
                                 <p>No transactions available</p>
                             ) : (
-                                <div className={cx('transaction-list')}>
+                                <div className={cx('transaction-list')} data-testid="transactions-list">
                                     {transactions.map((transaction) => (
                                         <div key={transaction.id} className={cx('transaction-item')}>
                                             <div className={cx('transaction-item-content')}>
@@ -184,8 +186,10 @@ function Home() {
                                                 <p>{formatDate(transaction.date)}</p>
                                             </div>
                                             <p style={{ color: transaction.type === 'Income' ? '#20C997' : '#E74C3C' }}>
-                                                {transaction.amount} VND
-                                                {/* {transaction.amount.toLocaleString()} VND */}
+                                                {transaction.amount >= 1000
+                                                    ? transaction.amount.toLocaleString()
+                                                    : transaction.amount}{' '}
+                                                VND
                                             </p>
                                         </div>
                                     ))}
@@ -195,7 +199,7 @@ function Home() {
                     </div>
                 </div>
                 <div className={cx('right-side')}>
-                    <div className={cx('right-side-content')}>
+                    <div className={cx('right-side-content')} data-testid="calendar">
                         <Calendar transactions={transactions} />
                     </div>
                     <div className={cx('right-side-content')}>
@@ -206,23 +210,26 @@ function Home() {
                             </div>
                         ) : (
                             <div>
-                                <div className={cx('chart-filter')}>
+                                <div className={cx('chart-filter')} data-testid="donut-chart">
                                     <div className={cx('filter-item')}>
                                         <button
                                             className={cx('value', { selected: selectedFilter === 'Both' })}
                                             onClick={() => handleFilterSelect('Both')}
+                                            data-testid="both-button"
                                         >
                                             Both
                                         </button>
                                         <button
                                             className={cx('value', { selected: selectedFilter === 'Income' })}
                                             onClick={() => handleFilterSelect('Income')}
+                                            data-testid="income-button"
                                         >
                                             Income
                                         </button>
                                         <button
                                             className={cx('value', { selected: selectedFilter === 'Expense' })}
                                             onClick={() => handleFilterSelect('Expense')}
+                                            data-testid="expense-button"
                                         >
                                             Expense
                                         </button>
@@ -235,7 +242,7 @@ function Home() {
                         )}
                     </div>
                     <div className={cx('right-side-content')}>
-                        <div className={cx('total-amount')}>
+                        <div className={cx('total-amount')} data-testid="total-amount">
                             <TransactionSummary transactions={transactions} />
                         </div>
                     </div>

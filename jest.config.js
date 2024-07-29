@@ -83,6 +83,7 @@ const config = {
     moduleNameMapper: {
         '\\.(jpg|jpeg|png|gif|svg|ico)$': '<rootDir>/src/mocks/fileMock.js',
         '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+        '^~/(.*)$': '<rootDir>/src/$1',
     },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -127,7 +128,7 @@ const config = {
     // runner: "jest-runner",
 
     // The paths to modules that run some code to configure or set up the testing environment before each test
-    setupFiles: ['<rootDir>/jest.polyfills.js'],
+    setupFiles: ['<rootDir>/jest.polyfills.js', '<rootDir>/jest.setup.js'],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
     setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'],

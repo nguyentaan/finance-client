@@ -7,6 +7,29 @@ const mockUser = {
     userName: 'test@example.com',
 };
 
+const mockTransactions = [
+    {
+        id: '1',
+        email: 'test@example.com',
+        name: 'Salary',
+        type: 'Income',
+        description: 'Monthly salary',
+        date:'2021-09-01',
+        amount: 1000000,
+    },
+    {
+        id: '2',
+        email: 'test@example.com',
+        name: 'Rent',
+        type: 'Expense',
+        description: 'Monthly rent',
+        date:'2021-09-02',
+        amount: 500000,
+    }
+]
+
+const mockTransactionsWithoutData = [];
+
 let sessionUser = null;
 
 export const handlers = [
@@ -19,7 +42,7 @@ export const handlers = [
         const { email, password } = req.body;
 
         // Simulate the response based on the provided login details
-        if (email === 'test@example.com' && password === 'password') {
+        if (email === 'test@example.com' && password === '123aA.') {
             sessionUser = mockUser;
             return res(
                 ctx.status(200),
@@ -96,4 +119,33 @@ export const handlers = [
             );
         }
     }),
+
+    http.post('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/create', (req, res, ctx) => {
+        // http.post('http://localhost:7086/api/Transaction/create', (req, res, ctx) => {
+        const transaction = req.body;
+        if (transaction) {
+            return res(
+                ctx.status(200),
+                ctx.json({
+                    id: '123',
+                    message: 'Transaction created successfully',
+                    transaction,
+                }),
+            );
+        } else {
+            return res(
+                ctx.status(400),
+                ctx.json({
+                    message: 'Transaction creation failed',
+                }),
+            );
+        }
+    }),
+
+    http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
+        // http.get('http://localhost:7086/api/Transaction/byemail', (req, res, ctx) => {
+        const email = req.url.searchParams.get('email');
+        const transactions = email === 'test@example.com' ? mockTransactions : mockTransactionsWithoutData;
+        return res(ctx.status(200), ctx.json(transactions));
+    })
 ];
