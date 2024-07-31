@@ -27,6 +27,12 @@ const Login = () => {
     const dispatch = useDispatch();
     const isLoading = useSelector((state) => state.auth.loading);
 
+    useEffect(() => {
+        if (error) {
+            setHasEmailError(true);
+            setHasPasswordError(true);
+        }
+    }, [error]);
 
     const validateForm = () => {
         const newErrors = {};
@@ -174,7 +180,12 @@ const Login = () => {
                                         <Loading />
                                     </div>
                                 ) : (
-                                    <input type="submit" value={'Sign in'} disabled={isLoading} />
+                                    <input
+                                        data-testid="submit-button"
+                                        type="submit"
+                                        value={'Sign in'}
+                                        disabled={isLoading}
+                                    />
                                 )}
                             </div>
                             <div className={cx('create-account')}>

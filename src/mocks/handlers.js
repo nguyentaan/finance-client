@@ -33,8 +33,8 @@ const mockTransactionsWithoutData = [];
 let sessionUser = null;
 
 export const handlers = [
-    http.post('https://personal-finacne-tracking.azurewebsites.net/login', (req, res, ctx) => {
-        // http.post('http://localhost:5215/login', (req, res, ctx) => {
+    // http.post('https://personal-finacne-tracking.azurewebsites.net/login', (req, res, ctx) => {
+        http.post('https://localhost:7086/login', (req, res, ctx) => {
         const url = new URL(req.url);
         const useCookies = url.searchParams.get('useCookies');
         const useSessionCookies = url.searchParams.get('useSessionCookies');
@@ -63,8 +63,8 @@ export const handlers = [
         );
     }),
 
-    http.get('https://personal-finacne-tracking.azurewebsites.net/users/me', (req, res, ctx) => {
-        // http.get('http://localhost:5215/users/me', (req, res, ctx) => {
+    // http.get('https://personal-finacne-tracking.azurewebsites.net/users/me', (req, res, ctx) => {
+        http.get('https://localhost:7086/users/me', (req, res, ctx) => {
         if (sessionUser) {
             return res(ctx.status(200), ctx.json(sessionUser));
         }
@@ -76,8 +76,8 @@ export const handlers = [
         );
     }),
 
-    http.post('https://personal-finacne-tracking.azurewebsites.net/api/Auth/google-signin', (req, res, ctx) => {
-        // http.post('http://localhost:5215/api/Auth/google-signin', (req, res, ctx) => {
+    // http.post('https://personal-finacne-tracking.azurewebsites.net/api/Auth/google-signin', (req, res, ctx) => {
+        http.post('https://localhost:7086/api/Auth/google-signin', (req, res, ctx) => {
         const { tokenId } = req.body;
         if (tokenId === 'google-token') {
             sessionUser = mockUser;
@@ -97,8 +97,8 @@ export const handlers = [
         );
     }),
 
-    http.post('https://personal-finacne-tracking.azurewebsites.net/register', (req, res, ctx) => {
-        // http.post('http://localhost:5215/register', (req,res,ctx) => {
+    // http.post('https://personal-finacne-tracking.azurewebsites.net/register', (req, res, ctx) => {
+        http.post('https://localhost:7086/register', (req,res,ctx) => {
         const { email, password } = req.body;
         if (email && password) {
             sessionUser = mockUser;
@@ -120,8 +120,8 @@ export const handlers = [
         }
     }),
 
-    http.post('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/create', (req, res, ctx) => {
-        // http.post('http://localhost:7086/api/Transaction/create', (req, res, ctx) => {
+    // http.post('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/create', (req, res, ctx) => {
+        http.post('http://localhost:7086/api/Transaction/create', (req, res, ctx) => {
         const transaction = req.body;
         if (transaction) {
             return res(
@@ -142,8 +142,8 @@ export const handlers = [
         }
     }),
 
-    http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
-        // http.get('http://localhost:7086/api/Transaction/byemail', (req, res, ctx) => {
+    // http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
+        http.get('http://localhost:7086/api/Transaction/byemail', (req, res, ctx) => {
         const email = req.url.searchParams.get('email');
         const transactions = email === 'test@example.com' ? mockTransactions : mockTransactionsWithoutData;
         return res(ctx.status(200), ctx.json(transactions));

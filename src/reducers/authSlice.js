@@ -5,10 +5,10 @@ import instance from '../axios/axiosInstance';
 export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId, { rejectWithValue }) => {
     try {
         // console.log('Google Sign-In Payload:', tokenId);
-        // const res = await axios.post('https://localhost:7086/api/Auth/google-signin',
-        // const res = await axios.post('http://localhost:5215/api/Auth/google-signin',
-        const res = await instance.post(
-            'https://personal-finacne-tracking.azurewebsites.net/api/Auth/google-signin',
+        // const res = await instance.post(
+        //     'https://localhost:7086/api/Auth/google-signin',
+            const res = await instance.post(
+                'https://personal-finacne-tracking.azurewebsites.net/api/Auth/google-signin',
             {
                 tokenId: tokenId,
             },
@@ -38,9 +38,9 @@ export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId
 export const login = createAsyncThunk('auth/login', async ({ email, password }, { dispatch }) => {
     try {
         // console.log('Login Payload:', { email, password });
-        // const res = await instance.post('https://personal-finacne-tracking.azurewebsites.net/login?useCookies=true&useSessionCookies=true',
-        await instance.post(
-            'https://localhost:7086/login?useCookies=true&useSessionCookies=true',
+        const res = await instance.post('https://personal-finacne-tracking.azurewebsites.net/login?useCookies=true&useSessionCookies=true',
+        // await instance.post(
+        //     'https://localhost:7086/login?useCookies=true&useSessionCookies=true',
             {
                 email,
                 password,
@@ -60,8 +60,9 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
 
 export const fetchUserData = createAsyncThunk('auth/fetchUserData', async (_, { rejectWithValue }) => {
     try {
-        // const res = await instance.get('https://personal-finacne-tracking.azurewebsites.net/users/me',
-        const res = await instance.get('https://localhost:7086/users/me', {
+        const res = await instance.get('https://personal-finacne-tracking.azurewebsites.net/users/me',
+        // const res = await instance.get('https://localhost:7086/users/me', 
+        {
             withCredentials: true,
         });
         // localStorage.setItem('user', JSON.stringify(res.data));
@@ -76,12 +77,11 @@ export const register = createAsyncThunk('auth/register', async ({ email, passwo
         // console.log('Register Payload:', { email, password });
         const res = await instance.post(
             'https://personal-finacne-tracking.azurewebsites.net/register',
-            // const res = await axios.post('http://localhost:5215/register',
+            // const res = await instance.post('https://localhost:7086/register', 
             {
                 email,
                 password,
-            },
-        );
+            });
         // console.log('Register Response:', res.data);
 
         return res.data;

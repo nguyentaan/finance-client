@@ -34,7 +34,7 @@ describe('Home Page E2E Tests', () => {
         }).as('fetchTransactions');
 
         // Visit login page
-        cy.visit('http://localhost:3000');
+        cy.visit('https://localhost:3000');
 
         // Perform login
         cy.get('input#Email').type('test@example.com');
