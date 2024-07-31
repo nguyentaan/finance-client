@@ -38,7 +38,7 @@ export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId
 export const login = createAsyncThunk('auth/login', async ({ email, password }, { dispatch }) => {
     try {
         // console.log('Login Payload:', { email, password });
-        const res = await instance.post('https://personal-finacne-tracking.azurewebsites.net/login?useCookies=true&useSessionCookies=true',
+        await instance.post('https://personal-finacne-tracking.azurewebsites.net/login?useCookies=true&useSessionCookies=true',
         // await instance.post(
         //     'https://localhost:7086/login?useCookies=true&useSessionCookies=true',
             {
