@@ -3,7 +3,7 @@
 /* eslint-disable no-undef */
 describe('Login Page E2E Tests', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000');
+        cy.visit('https://localhost:3000');
     });
     it('should display the login page', () => {
         cy.contains('Login to Your Account').should('be.visible');

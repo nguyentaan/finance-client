@@ -1,26 +1,32 @@
 import React from 'react';
-import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor, render } from '@testing-library/react';
 import { renderWithProviders } from '../../utils/test-utils';
 import Login from '../../src/pages/Login/Login';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import CustomSnackbar from '../../src/components/snackbar/snackbar';
+import { Provider } from 'react-redux';
+import store from '../../src/reducers/store';
 
 
 describe('Login', () => {
     test('render google login button', async () => {
-        renderWithProviders(
-            <Router>
-                <Login />
-            </Router>,
+        render(
+            <Provider store={store}>
+                <MemoryRouter>
+                    <Login/>
+                </MemoryRouter>
+            </Provider>
         );
         const googleButton = screen.getByTestId('google-button');
         expect(googleButton).toBeInTheDocument();
     })
     test('render login form', async () => {
-        renderWithProviders(
-            <Router>
-                <Login />
-            </Router>,
+        render(
+            <Provider store={store}>
+                <MemoryRouter>
+                    <Login />
+                </MemoryRouter>
+            </Provider>,
         );
 
         expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
@@ -29,10 +35,12 @@ describe('Login', () => {
     });
 
     test('should show validation error when email or password is missing', async () => {
-        renderWithProviders(
-            <Router>
-                <Login />
-            </Router>,
+        render(
+            <Provider store={store}>
+                <MemoryRouter>
+                    <Login />
+                </MemoryRouter>
+            </Provider>,
         );
 
         fireEvent.click(screen.getByDisplayValue('Sign in'));
@@ -45,10 +53,12 @@ describe('Login', () => {
     });
 
     test('should successfully login', async () => {
-        renderWithProviders(
-            <Router>
-                <Login />
-            </Router>,
+        render(
+            <Provider store={store}>
+                <MemoryRouter>
+                    <Login />
+                </MemoryRouter>
+            </Provider>,
         );
         fireEvent.change(screen.getByPlaceholderText('Email'), {
             target: { value: 'test@example.com' },
@@ -67,10 +77,12 @@ describe('Login', () => {
     });
 
     test('shoudl fail to login', async () => {
-        renderWithProviders(
-            <Router>
-                <Login />
-            </Router>,
+        render(
+            <Provider store={store}>
+                <MemoryRouter>
+                    <Login />
+                </MemoryRouter>
+            </Provider>,
         );
         fireEvent.change(screen.getByPlaceholderText('Email'), {
             target: { value: 'test@example.com' },
@@ -78,7 +90,7 @@ describe('Login', () => {
         fireEvent.change(screen.getByPlaceholderText('Password'), {
             target: { value: 'wrongpassword' },
         });
-        fireEvent.click(screen.getByDisplayValue('Sign in'));
+        fireEvent.click(screen.getByTestId('submit-button'))
         // Wait for snackbar to appear
         renderWithProviders(<CustomSnackbar />);
         const snackbar = screen.getByTestId('snackbar');

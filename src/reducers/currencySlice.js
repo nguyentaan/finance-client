@@ -3,10 +3,11 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     selectedCurrency: 'VND',
     exchangeRates: {
-        VND: 1,
-        USD: 0.000043,
-        EUR: 0.000038,
+        USD: 1,
+        EUR: 0.85,
+        VND: 23000,
     },
+    convertedAmount: 0,
 };
 
 const currencySlice = createSlice({
@@ -19,9 +20,14 @@ const currencySlice = createSlice({
         setExchangeRates(state, action) {
             state.exchangeRates = action.payload;
         },
+        convertCurrency(state, action) {
+            const amount = action.payload;
+            const rate = state.exchangeRates[state.selectedCurrency];
+            state.convertedAmount = amount * rate;
+        }
     },
 });
 
-export const { setCurrency, setExchangeRates } = currencySlice.actions;
+export const { setCurrency, setExchangeRates, convertCurrency } = currencySlice.actions;
 
 export default currencySlice.reducer;

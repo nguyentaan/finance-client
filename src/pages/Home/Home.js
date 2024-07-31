@@ -6,11 +6,14 @@ import DoughnutChart from '~/components/charts/DoughnutChart';
 import Calendar from '~/components/calendar/Calendar';
 import { useSelector, useDispatch } from 'react-redux';
 import TabContent from '~/components/tabContent/tabContent';
-import { fetchTransactionsByEmail } from '~/reducers/transSlice';
+import { fetchTransactionsByEmail, deleteTransaction } from '~/reducers/transSlice';
 import { useEffect, useState } from 'react';
 import TransactionSummary from '~/components/transactionSumary';
 import LineChartIcon from '~/assets/line-chart.png';
 import DonutChartIcon from '~/assets/donut-chart.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { toggleIsOpen, setIsUpdate } from '../../reducers/homeSlice'; // Updated import
 
 const cx = classNames.bind(styles);
 
@@ -36,16 +39,25 @@ function Home() {
     const user = useSelector((state) => state.auth);
     const transactions = useSelector((state) => state.transactions.transactions || []);
     const [selectedFilter, setSelectedFilter] = useState('Both');
-    // const { loading, error } = useSelector((state) => state.transactions);
     const userEmail = user.user.email;
+    const isUpdate = useSelector((state) => state.isOpen.isUpdate); // Updated line
+    const [transactionToEdit, setTransactionToEdit] = useState(null);
     // const userEmail = 'tanhero2002@gmail.com';
-
-    // console.log('transactions:', transactions);
 
     const handleFilterSelect = (filter) => {
         setSelectedFilter(filter);
         // console.log('selectedFilter:', selectedFilter);
     };
+
+    const handleOpen = (transaction) => {
+        dispatch(toggleIsOpen());
+        dispatch(setIsUpdate(true));
+        setTransactionToEdit(transaction);
+    };
+
+    const handleDelete = (transaction) => {
+        dispatch(deleteTransaction(transaction.id));
+    }
 
     useEffect(() => {
         dispatch(fetchTransactionsByEmail(userEmail));
@@ -153,7 +165,7 @@ function Home() {
 
     return (
         <div className={cx('container-body')}>
-            <TabContent />
+            <TabContent edit={isUpdate} transactionToEdit={transactionToEdit} />
             <div className={cx('title-content')}>
                 <h1>Welcome, {user.user.email} </h1>
             </div>
@@ -178,21 +190,45 @@ function Home() {
                                 <p>No transactions available</p>
                             ) : (
                                 <div className={cx('transaction-list')} data-testid="transactions-list">
-                                    {transactions.map((transaction) => (
-                                        <div key={transaction.id} className={cx('transaction-item')}>
-                                            <div className={cx('transaction-item-content')}>
-                                                <h2>{transaction.name}</h2>
-                                                <p>{transaction.type}</p>
-                                                <p>{formatDate(transaction.date)}</p>
+                                    {[...transactions] // Create a copy of transactions array
+                                        .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date, newest first
+                                        .map((transaction) => (
+                                            <div key={transaction.id} className={cx('transaction-item')}>
+                                                <div className={cx('transaction-item-content')}>
+                                                    <h2>{transaction.name}</h2>
+                                                    <div className={cx('items-group')}>
+                                                        <div>
+                                                            <p>{transaction.type}</p>
+                                                            <p>{formatDate(transaction.date)}</p>
+                                                        </div>
+                                                        <div className={cx('icons-group')}>
+                                                            <button
+                                                                className={cx('button-icons', 'pen')}
+                                                                onClick={() => handleOpen(transaction)}
+                                                            >
+                                                                <FontAwesomeIcon icon={faPen} />
+                                                            </button>
+                                                            <button
+                                                                className={cx('button-icons', 'trash')}
+                                                                onClick={() => handleDelete(transaction)}
+                                                            >
+                                                                <FontAwesomeIcon icon={faTrash} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <p
+                                                    style={{
+                                                        color: transaction.type === 'Income' ? '#20C997' : '#E74C3C',
+                                                    }}
+                                                >
+                                                    {transaction.amount >= 1000
+                                                        ? transaction.amount.toLocaleString()
+                                                        : transaction.amount}
+                                                    VND
+                                                </p>
                                             </div>
-                                            <p style={{ color: transaction.type === 'Income' ? '#20C997' : '#E74C3C' }}>
-                                                {transaction.amount >= 1000
-                                                    ? transaction.amount.toLocaleString()
-                                                    : transaction.amount}{' '}
-                                                VND
-                                            </p>
-                                        </div>
-                                    ))}
+                                        ))}
                                 </div>
                             )}
                         </div>

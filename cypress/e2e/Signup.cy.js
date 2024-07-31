@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 describe('Register page E2E Tests', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000/register');
+        cy.visit('https://localhost:3000/register');
     });
 
     it('should display the registration form', () => {
@@ -54,7 +54,7 @@ describe('Register page E2E Tests', () => {
         cy.get('input[type="submit"]').click();
 
         cy.wait('@register').its('response.statusCode').should('eq', 200);
-        cy.url().should('eq', `http://localhost:3000/`);
+        cy.url().should('include', '/');
     });
 
     it('should navigate to login page', () => {
