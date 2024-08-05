@@ -75,6 +75,7 @@ const TabContent = ({ edit, transactionToEdit }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (edit && transactionToEdit) {
+            console.log('Updating transaction:', { ...formData, id: transactionToEdit.id });
             const res = await dispatch(updateTransaction({ ...formData, id: transactionToEdit.id }));
             if (res.meta.requestStatus === 'fulfilled') {
                 console.log('Transaction updated successfully:', res.payload);

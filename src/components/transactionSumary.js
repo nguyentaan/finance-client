@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
 import styles from './../pages/Home/home.module.css';
 
 const cx = classNames.bind(styles);
@@ -35,6 +36,26 @@ const TransactionSummary = ({ transactions }) => {
             <p>{percentChange}</p>
         </div>
     );
+};
+
+// Set default props
+TransactionSummary.defaultProps = {
+    transactions: [],
+};
+
+// Define prop types
+TransactionSummary.propTypes = {
+    transactions: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            email: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            type: PropTypes.string.isRequired,
+            description: PropTypes.string,
+            date: PropTypes.string.isRequired,
+            amount: PropTypes.number.isRequired,
+        }),
+    ),
 };
 
 export default TransactionSummary;

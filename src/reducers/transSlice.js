@@ -16,9 +16,8 @@ export const createTransaction = createAsyncThunk(
         try {
             const response = await instance.post(
                 'https://personal-finacne-tracking.azurewebsites.net/api/Transaction/create',
-                // const response = await instance.post('https://localhost:7086/api/Transaction/create',
-                transactionData,
-            );
+            // const response = await instance.post('https://localhost:7086/api/Transaction/create', 
+            transactionData);
             return {
                 data: response.data,
                 status: response.status,
@@ -64,9 +63,10 @@ export const updateTransaction = createAsyncThunk(
 
 export const deleteTransaction = createAsyncThunk('transaction/deleteTransaction', async (id, { rejectWithValue }) => {
     try {
-        const response = await instance.delete(`
-            https://personal-finacne-tracking.azurewebsites.net/api/Transaction/delete/${id}`);
-        // https://localhost:7086/api/Transaction/delete/${id}`
+        const response = await instance.delete(
+            `https://personal-finacne-tracking.azurewebsites.net/api/Transaction/delete/${id}`);
+            // `https://localhost:7086/api/Transaction/delete/${id}`,
+        // );
         return response.data;
     } catch (error) {
         return rejectWithValue(error.response ? error.response.data : 'An error occurred');
@@ -108,7 +108,7 @@ const transactionSlice = createSlice({
         });
         builder.addCase(updateTransaction.fulfilled, (state, action) => {
             state.loading = false;
-            state.items = state.items.map((transaction) =>
+            state.transactions = state.transactions.map((transaction) =>
                 transaction.id === action.payload.id ? action.payload : transaction,
             );
         });
@@ -121,8 +121,8 @@ const transactionSlice = createSlice({
             state.error = null;
         });
         builder.addCase(deleteTransaction.fulfilled, (state, action) => {
-            state.transactions = state.transactions.filter((transaction) => transaction.id !== action.payload);
             state.loading = false;
+            state.transactions = state.transactions.filter((transaction) => transaction.id !== action.meta.arg);
         });
         builder.addCase(deleteTransaction.rejected, (state, action) => {
             state.loading = false;

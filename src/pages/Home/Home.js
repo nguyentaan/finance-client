@@ -1,19 +1,18 @@
-import styles from './home.module.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames/bind';
 import LineChart from '~/components/charts/LineChart';
 import DoughnutChart from '~/components/charts/DoughnutChart';
 import Calendar from '~/components/calendar/Calendar';
-import { useSelector, useDispatch } from 'react-redux';
 import TabContent from '~/components/tabContent/tabContent';
-import { fetchTransactionsByEmail, deleteTransaction } from '~/reducers/transSlice';
-import { useEffect, useState } from 'react';
 import TransactionSummary from '~/components/transactionSumary';
 import LineChartIcon from '~/assets/line-chart.png';
 import DonutChartIcon from '~/assets/donut-chart.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { toggleIsOpen, setIsUpdate } from '../../reducers/homeSlice'; // Updated import
+import { fetchTransactionsByEmail, deleteTransaction } from '~/reducers/transSlice';
+import { toggleIsOpen, setIsUpdate } from '~/reducers/homeSlice';
+import styles from './home.module.css';
 
 const cx = classNames.bind(styles);
 
@@ -40,13 +39,15 @@ function Home() {
     const transactions = useSelector((state) => state.transactions.transactions || []);
     const [selectedFilter, setSelectedFilter] = useState('Both');
     const userEmail = user.user.email;
-    const isUpdate = useSelector((state) => state.isOpen.isUpdate); // Updated line
+    const isUpdate = useSelector((state) => state.isOpen.isUpdate);
     const [transactionToEdit, setTransactionToEdit] = useState(null);
-    // const userEmail = 'tanhero2002@gmail.com';
+
+    useEffect(() => {
+        dispatch(fetchTransactionsByEmail(userEmail));
+    }, [dispatch, userEmail]);
 
     const handleFilterSelect = (filter) => {
         setSelectedFilter(filter);
-        // console.log('selectedFilter:', selectedFilter);
     };
 
     const handleOpen = (transaction) => {
@@ -55,18 +56,14 @@ function Home() {
         setTransactionToEdit(transaction);
     };
 
-    const handleDelete = (transaction) => {
-        dispatch(deleteTransaction(transaction.id));
-    }
-
-    useEffect(() => {
-        dispatch(fetchTransactionsByEmail(userEmail));
-    }, [dispatch, userEmail]);
+    const handleDelete = async (transaction) => {
+        await dispatch(deleteTransaction(transaction.id));
+    };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // January is 0!
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     };
@@ -90,10 +87,8 @@ function Home() {
         expense: transactionsByDate[dateKey].expense,
     }));
 
-    // Sort the array by date in ascending order (oldest to newest)
     sortedTransactions.sort((a, b) => a.date - b.date);
 
-    // Prepare lineChartData using the sorted data
     const lineChartData = {
         labels: sortedTransactions.map((item) => item.date.toLocaleDateString()),
         datasets: [
@@ -119,7 +114,7 @@ function Home() {
             } else if (selectedFilter === 'Expense') {
                 return transaction.type === 'Expense';
             } else {
-                return true; // Include all transactions for 'Both' type
+                return true;
             }
         })
         .reduce((acc, transaction) => {
@@ -130,7 +125,6 @@ function Home() {
             return acc;
         }, {});
 
-    // Prepare doughnutChartData for DoughnutChart component
     const doughnutChartData = {
         labels: Object.keys(filterByType),
         datasets: [
@@ -138,26 +132,26 @@ function Home() {
                 label: selectedFilter,
                 data: Object.values(filterByType),
                 backgroundColor: [
-                    '#FF6384', // Red
-                    '#36A2EB', // Blue
-                    '#FFCE56', // Yellow
-                    '#4BC0C0', // Green
-                    '#9966FF', // Purple
-                    '#FF9F40', // Orange
-                    '#5C5C5C', // Gray
-                    '#F7FF33', // Yellow
-                    '#4C005C', // Purple
-                    '#5CC5C5', // Cyan
-                    '#6699FF', // Blue
-                    '#339933', // Green
-                    '#999999', // Gray
-                    '#B333FF', // Purple
-                    '#FF8033', // Orange
-                    '#CC0000', // Red
-                    '#993300', // Brown
-                    '#FF6600', // Orange
-                    '#4C9900', // Green
-                    '#3300FF', // Blue
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4BC0C0',
+                    '#9966FF',
+                    '#FF9F40',
+                    '#5C5C5C',
+                    '#F7FF33',
+                    '#4C005C',
+                    '#5CC5C5',
+                    '#6699FF',
+                    '#339933',
+                    '#999999',
+                    '#B333FF',
+                    '#FF8033',
+                    '#CC0000',
+                    '#993300',
+                    '#FF6600',
+                    '#4C9900',
+                    '#3300FF',
                 ],
             },
         ],
@@ -190,8 +184,8 @@ function Home() {
                                 <p>No transactions available</p>
                             ) : (
                                 <div className={cx('transaction-list')} data-testid="transactions-list">
-                                    {[...transactions] // Create a copy of transactions array
-                                        .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date, newest first
+                                    {[...transactions]
+                                        .sort((a, b) => new Date(b.date) - new Date(a.date))
                                         .map((transaction) => (
                                             <div key={transaction.id} className={cx('transaction-item')}>
                                                 <div className={cx('transaction-item-content')}>
@@ -271,16 +265,12 @@ function Home() {
                                         </button>
                                     </div>
                                 </div>
-                                <div className={cx('chart-contain')}>
-                                    <DoughnutChart data={doughnutChartData} options={doughnutChartOptions} />
-                                </div>
+                                <DoughnutChart data={doughnutChartData} options={doughnutChartOptions} />
                             </div>
                         )}
                     </div>
-                    <div className={cx('right-side-content')}>
-                        <div className={cx('total-amount')} data-testid="total-amount">
-                            <TransactionSummary transactions={transactions} />
-                        </div>
+                    <div className={cx('right-side-content')} data-testid="total-amount">
+                        <TransactionSummary />
                     </div>
                 </div>
             </div>

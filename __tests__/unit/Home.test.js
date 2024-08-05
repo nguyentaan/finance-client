@@ -37,7 +37,7 @@ const mockStore = configureStore({
     reducer: {
         auth: userReducer,
         transactions: transactionsReducer,
-        isOpen: isOpenReducer, // Ensure reducer is correctly referenced
+        isOpen: isOpenReducer,
     },
     preloadedState: {
         auth: {
@@ -49,7 +49,7 @@ const mockStore = configureStore({
             transactions: mockTransactions,
         },
         isOpen: {
-            isOpen: false, // Default value for `isOpen`
+            isOpen: false,
         },
     },
 });
@@ -77,13 +77,15 @@ const mockStoreWithoutTransactions = configureStore({
 });
 
 describe('Home', () => {
-    test('should render all components when there are transactions', async () => {
+    test('should renders the Home component with welcome message', async () => {
         server.use(
             http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
                 const email = req.url.searchParams.get('email');
                 const userTransactions = mockTransactions.filter((transaction) => transaction.email === email);
                 if (userTransactions.length > 0) {
                     return res(ctx.status(200), ctx.json(userTransactions));
+                } else {
+                    return res(ctx.status(200), ctx.json([]));
                 }
             }),
         );
@@ -95,11 +97,215 @@ describe('Home', () => {
             </Provider>,
         );
         expect(screen.getByText('Welcome, test@example.com')).toBeInTheDocument();
-        expect(screen.getByTestId('line-chart')).toBeInTheDocument();
-        expect(screen.getByTestId('transactions-list')).toBeInTheDocument();
-        expect(screen.getByTestId('donut-chart')).toBeInTheDocument();
-        expect(screen.getByTestId('calendar')).toBeInTheDocument();
-        expect(screen.getByTestId('total-amount')).toBeInTheDocument();
+    });
+
+    test('should render LineChart with data when transactions are available', async () => {
+        server.use(
+            http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
+                const email = req.url.searchParams.get('email');
+                const userTransactions = mockTransactions.filter((transaction) => transaction.email === email);
+                return res(ctx.status(200), ctx.json(userTransactions));
+            }),
+        );
+
+        render(
+            <Provider store={mockStore}>
+                <MemoryRouter>
+                    <Home />
+                </MemoryRouter>
+            </Provider>,
+        );
+
+        // Check if LineChart component is rendered with data
+        const lineChart = screen.getByTestId('line-chart');
+        expect(lineChart).toBeInTheDocument();
+        // Add more specific checks if needed, e.g., checking if chart has correct data
+    });
+
+    test('should render DoughnutChart with filter options when transactions are available', async () => {
+        server.use(
+            http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
+                const email = req.url.searchParams.get('email');
+                const userTransactions = mockTransactions.filter((transaction) => transaction.email === email);
+                return res(ctx.status(200), ctx.json(userTransactions));
+            }),
+        );
+
+        render(
+            <Provider store={mockStore}>
+                <MemoryRouter>
+                    <Home />
+                </MemoryRouter>
+            </Provider>,
+        );
+
+        const doughnutChart = screen.getByTestId('donut-chart');
+        expect(doughnutChart).toBeInTheDocument();
+
+        // Check if filter buttons are present
+        expect(screen.getByTestId('both-button')).toBeInTheDocument();
+        expect(screen.getByTestId('income-button')).toBeInTheDocument();
+        expect(screen.getByTestId('expense-button')).toBeInTheDocument();
+    });
+
+    test('should render Calendar component when transactions are available', async () => {
+        server.use(
+            http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
+                const email = req.url.searchParams.get('email');
+                const userTransactions = mockTransactions.filter((transaction) => transaction.email === email);
+                return res(ctx.status(200), ctx.json(userTransactions));
+            }),
+        );
+
+        render(
+            <Provider store={mockStore}>
+                <MemoryRouter>
+                    <Home />
+                </MemoryRouter>
+            </Provider>,
+        );
+
+        const calendar = screen.getByTestId('calendar');
+        expect(calendar).toBeInTheDocument();
+        // Add more specific checks if needed, e.g., checking if calendar displays transactions
+    });
+
+    test('should render TransactionSummary component when transactions are available', async () => {
+        server.use(
+            http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
+                const email = req.url.searchParams.get('email');
+                const userTransactions = mockTransactions.filter((transaction) => transaction.email === email);
+                return res(ctx.status(200), ctx.json(userTransactions));
+            }),
+        );
+
+        render(
+            <Provider store={mockStore}>
+                <MemoryRouter>
+                    <Home />
+                </MemoryRouter>
+            </Provider>,
+        );
+
+        const totalAmount = screen.getByTestId('total-amount');
+        expect(totalAmount).toBeInTheDocument();
+        // Add more specific checks if needed, e.g., checking if the summary displays correct totals
+    });
+
+    test('should render transaction list with transactions', async () => {
+        server.use(
+            http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
+                const email = req.url.searchParams.get('email');
+                const userTransactions = mockTransactions.filter((transaction) => transaction.email === email);
+                return res(ctx.status(200), ctx.json(userTransactions));
+            }),
+        );
+
+        render(
+            <Provider store={mockStore}>
+                <MemoryRouter>
+                    <Home />
+                </MemoryRouter>
+            </Provider>,
+        );
+
+        const transactionList = screen.getByTestId('transactions-list');
+        expect(transactionList).toBeInTheDocument();
+
+        // Check if transaction items are rendered
+        expect(screen.getByText('Salary')).toBeInTheDocument();
+        expect(screen.getByText('Rent')).toBeInTheDocument();
+    });
+
+    test('should apply filter and display correct DoughnutChart data', async () => {
+        server.use(
+            http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
+                const email = req.url.searchParams.get('email');
+                const userTransactions = mockTransactions.filter((transaction) => transaction.email === email);
+                return res(ctx.status(200), ctx.json(userTransactions));
+            }),
+        );
+
+        render(
+            <Provider store={mockStore}>
+                <MemoryRouter>
+                    <Home />
+                </MemoryRouter>
+            </Provider>,
+        );
+
+        const bothButton = screen.getByTestId('both-button');
+        const incomeButton = screen.getByTestId('income-button');
+        const expenseButton = screen.getByTestId('expense-button');
+        expect(bothButton).toBeInTheDocument();
+        expect(incomeButton).toBeInTheDocument();
+        expect(expenseButton).toBeInTheDocument();
+        // Check initial state
+        expect(incomeButton).not.toHaveClass('selected');
+        expect(expenseButton).not.toHaveClass('selected');
+        expect(bothButton).toHaveClass('selected');
+    });
+
+    test('should apply filter "Income" and display correct DoughnutChart data', async () => {
+        server.use(
+            http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
+                const email = req.url.searchParams.get('email');
+                const userTransactions = mockTransactions.filter((transaction) => transaction.email === email);
+                return res(ctx.status(200), ctx.json(userTransactions));
+            }),
+        );
+
+        render(
+            <Provider store={mockStore}>
+                <MemoryRouter>
+                    <Home />
+                </MemoryRouter>
+            </Provider>,
+        );
+
+        const bothButton = screen.getByTestId('both-button');
+        const incomeButton = screen.getByTestId('income-button');
+        const expenseButton = screen.getByTestId('expense-button');
+        expect(bothButton).toBeInTheDocument();
+        expect(incomeButton).toBeInTheDocument();
+        expect(expenseButton).toBeInTheDocument();
+        // Check initial state
+        // Interact with filter buttons
+        fireEvent.click(incomeButton);
+        expect(incomeButton).toHaveClass('selected');
+        expect(expenseButton).not.toHaveClass('selected');
+        expect(bothButton).not.toHaveClass('selected');
+    });
+
+    test('should apply filter "Expense" and display correct DoughnutChart data', async () => {
+        server.use(
+            http.get('https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail', (req, res, ctx) => {
+                const email = req.url.searchParams.get('email');
+                const userTransactions = mockTransactions.filter((transaction) => transaction.email === email);
+                return res(ctx.status(200), ctx.json(userTransactions));
+            }),
+        );
+
+        render(
+            <Provider store={mockStore}>
+                <MemoryRouter>
+                    <Home />
+                </MemoryRouter>
+            </Provider>,
+        );
+
+        const bothButton = screen.getByTestId('both-button');
+        const incomeButton = screen.getByTestId('income-button');
+        const expenseButton = screen.getByTestId('expense-button');
+        expect(bothButton).toBeInTheDocument();
+        expect(incomeButton).toBeInTheDocument();
+        expect(expenseButton).toBeInTheDocument();
+        // Check initial state
+        // Interact with filter buttons
+        fireEvent.click(expenseButton);
+        expect(incomeButton).not.toHaveClass('selected');
+        expect(expenseButton).toHaveClass('selected');
+        expect(bothButton).not.toHaveClass('selected');
     });
 
     test('should render all components when there are no transactions', async () => {
@@ -147,35 +353,7 @@ describe('Home', () => {
         const expenseButton = screen.getByTestId('expense-button');
         expect(expenseButton).toBeInTheDocument();
     });
-    test('should apply "selected" class in to the active "Both" filter button', () => {
-        render(
-            <Provider store={mockStore}>
-                <MemoryRouter>
-                    <Home />
-                </MemoryRouter>
-            </Provider>,
-        );
 
-        // Check initial state: "Both" filter should be selected
-        const bothButton = screen.getByTestId('both-button');
-
-        expect(bothButton).toHaveClass('selected');
-    });
-    test('should render transaction list correctly when transactions are available', () => {
-        render(
-            <Provider store={mockStore}>
-                <MemoryRouter>
-                    <Home />
-                </MemoryRouter>
-            </Provider>,
-        );
-
-        const transactionItem1 = screen.getByText('Salary');
-        const transactionItem2 = screen.getByText('Rent');
-
-        expect(transactionItem1).toBeInTheDocument();
-        expect(transactionItem2).toBeInTheDocument();
-    });
     test('should format date correctly', () => {
         render(
             <Provider store={mockStore}>
@@ -184,7 +362,6 @@ describe('Home', () => {
                 </MemoryRouter>
             </Provider>,
         );
-        // const homeInstance = container.firstChild;
 
         const formatDate = (dateString) => {
             const date = new Date(dateString);
