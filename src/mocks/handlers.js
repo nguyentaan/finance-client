@@ -1,6 +1,4 @@
-import { rest } from 'msw';
-
-const API_URL = process.env.REACT_APP_API_URL;
+import { http } from 'msw';
 
 const mockUser = {
     id: 1,
@@ -34,14 +32,13 @@ const mockTransactionsWithoutData = [];
 let sessionUser = null;
 
 export const handlers = [
-    rest.post(`${API_URL}/login`, (req, res, ctx) => {
+    http.post('/login', (req, res, ctx) => {
         const url = new URL(req.url);
         const useCookies = url.searchParams.get('useCookies');
         const useSessionCookies = url.searchParams.get('useSessionCookies');
 
         const { email, password } = req.body;
 
-        // Simulate the response based on the provided login details
         if (email === 'test@example.com' && password === '123aA.') {
             sessionUser = mockUser;
             return res(
@@ -63,7 +60,7 @@ export const handlers = [
         );
     }),
 
-    rest.get(`${API_URL}/users/me`, (req, res, ctx) => {
+    http.get('/users/me', (req, res, ctx) => {
         if (sessionUser) {
             return res(ctx.status(200), ctx.json(sessionUser));
         }
@@ -75,7 +72,7 @@ export const handlers = [
         );
     }),
 
-    rest.post(`${API_URL}/api/Auth/google-signin`, (req, res, ctx) => {
+    http.post('/api/Auth/google-signin', (req, res, ctx) => {
         const { tokenId } = req.body;
         if (tokenId === 'google-token') {
             sessionUser = mockUser;
@@ -95,7 +92,7 @@ export const handlers = [
         );
     }),
 
-    rest.post(`${API_URL}/register`, (req, res, ctx) => {
+    http.post('/register', (req, res, ctx) => {
         const { email, password } = req.body;
         if (email && password) {
             sessionUser = mockUser;
@@ -117,7 +114,7 @@ export const handlers = [
         }
     }),
 
-    rest.post(`${API_URL}/api/Transaction/create`, (req, res, ctx) => {
+    http.post('/api/Transaction/create', (req, res, ctx) => {
         const transaction = req.body;
         if (transaction) {
             return res(
@@ -138,7 +135,7 @@ export const handlers = [
         }
     }),
 
-    rest.get(`${API_URL}/api/Transaction/byemail`, (req, res, ctx) => {
+    http.get('/api/Transaction/byemail', (req, res, ctx) => {
         const email = req.url.searchParams.get('email');
         const transactions = email === 'test@example.com' ? mockTransactions : mockTransactionsWithoutData;
         return res(ctx.status(200), ctx.json(transactions));
