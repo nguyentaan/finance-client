@@ -252,3 +252,13 @@
 .select:has(.options input[type='radio']#option-3:checked) .selected::before {
     content: attr(data-three);
 }
+
+.validation-message {
+    color: #E74C3C; /* Red color for error messages */
+    font-size: 0.9rem; /* Slightly smaller text size */
+    margin-top: 0.5rem; /* Space between the input and the message */
+    padding: 0.25rem 0.5rem; /* Padding around the text */
+    background-color: #FDEDED; /* Light red background for better visibility */
+    border: 1px solid #E74C3C; /* Red border to match the text color */
+    border-radius: 4px; /* Rounded corners for a cleaner look */
+}
