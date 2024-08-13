@@ -74,6 +74,10 @@ const TabContent = ({ edit, transactionToEdit }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (formData.amount < 1000) {
+            alert('Amount must be at least 1000 VND.');
+            return;
+        }
         if (edit && transactionToEdit) {
             console.log('Updating transaction:', { ...formData, id: transactionToEdit.id });
             const res = await dispatch(updateTransaction({ ...formData, id: transactionToEdit.id }));
@@ -110,14 +114,14 @@ const TabContent = ({ edit, transactionToEdit }) => {
                         <div className={cx('item-content')}>
                             <h3>Type</h3>
                             <div className={cx('select')}>
-                                <div className={cx('selected')} data-default="..." data-one="Income" data-two="Expense">
+                                <div className={cx('selected')} data-one="Income" data-two="Expense">
                                     {selectedOption}
                                     <div className={cx('arrow')}>
                                         <FontAwesomeIcon icon={faChevronDown} size="1x" />
                                     </div>
                                 </div>
                                 <div className={cx('options')}>
-                                    {['...', 'Income', 'Expense'].map((option) => (
+                                    {['Income', 'Expense'].map((option) => (
                                         <div key={option} title={option}>
                                             <input
                                                 id={option}
@@ -174,16 +178,21 @@ const TabContent = ({ edit, transactionToEdit }) => {
                             <input
                                 type="number"
                                 className={cx('input')}
-                                placeholder="0.00 VND"
+                                placeholder="1,0000 VND"
                                 name="amount"
                                 value={formData.amount}
                                 onChange={handleChange}
                                 required
+                                min="1000"
+                                step="0.01"
                             />
+                            {formData.amount < 1000 && formData.amount.length > 0 && (
+                                <p className={cx('validation-message')}>Amount must be at least 1000 VND.</p>
+                            )}
                         </div>
                     </div>
                     <button className={cx('submit-button')} type="submit">
-                        {loading ? <Loading /> : (edit ? 'Update transaction' : 'Add transaction')}
+                        {loading ? <Loading /> : edit ? 'Update transaction' : 'Add transaction'}
                     </button>
                 </form>
             </div>

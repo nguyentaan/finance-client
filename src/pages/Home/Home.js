@@ -272,7 +272,7 @@ function Home() {
                         )}
                     </div>
                     <div className={cx('right-side-content')} data-testid="total-amount">
-                        <TransactionSummary />
+                        <TransactionSummary transactions={transactions} />
                     </div>
                 </div>
             </div>

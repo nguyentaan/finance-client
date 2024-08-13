@@ -6,6 +6,7 @@
     width: 50px;
     height: 100%;
     /* bottom: -6px; */
+    pointer-events: none;
 }
 
 .selector {
