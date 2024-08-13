@@ -2,10 +2,20 @@ const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
     e2e: {
-        baseUrl: 'http://localhost:3000',
+        baseUrl: 'https://localhost:3000',
+        chromeWebSecurity: false,
         setupNodeEvents(on, config) {
             // implement node event listeners here
+            const { GoogleSocialLogin } = require('cypress-social-logins').plugins;
+            on('task', {
+                GoogleSocialLogin: GoogleSocialLogin,
+            });
         },
+    },
+    env: {
+        googleRefreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+        googleClientId: process.env.REACT_APP_GOOGLE_CLIENTID,
+        googleClientSecret: process.env.REACT_APP_GOOGLE_CLIENT_SECRET,
     },
 
     component: {

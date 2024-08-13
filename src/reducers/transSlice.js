@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import axios from 'axios';
 import instance from '~/axios/axiosInstance';
 
 const initialState = {
@@ -8,16 +7,12 @@ const initialState = {
     error: null,
 };
 
-// axios.defaults.withCredentials = true;
 
 export const createTransaction = createAsyncThunk(
     'transaction/createTransaction',
     async (transactionData, { rejectWithValue }) => {
         try {
-            const response = await instance.post(
-                'https://personal-finacne-tracking.azurewebsites.net/api/Transaction/create',
-            // const response = await instance.post('https://localhost:7086/api/Transaction/create', 
-            transactionData);
+            const response = await instance.post('/api/Transaction/create', transactionData);
             return {
                 data: response.data,
                 status: response.status,
@@ -34,14 +29,7 @@ export const createTransaction = createAsyncThunk(
 );
 
 export const fetchTransactionsByEmail = createAsyncThunk('transaction/fetchByEmail', async (email) => {
-    // const response = await instance.get(
-    //     `https://localhost:7086/api/Transaction/byemail?email=${encodeURIComponent(email)}`,
-    // );
-    const response = await instance.get(
-        `https://personal-finacne-tracking.azurewebsites.net/api/Transaction/byemail?email=${encodeURIComponent(
-            email,
-        )}`,
-    );
+    const response = await instance.get(`/api/Transaction/byemail?email=${encodeURIComponent(email)}`);
     return response.data;
 });
 
@@ -50,8 +38,7 @@ export const updateTransaction = createAsyncThunk(
     async (transactionData, { rejectWithValue }) => {
         try {
             const response = await instance.put(
-                `https://personal-finacne-tracking.azurewebsites.net/api/Transaction/update/${transactionData.id}`,
-                // `https://localhost:7086/api/Transaction/update/${transactionData.id}`,
+                `/api/Transaction/update/${transactionData.id}`,
                 transactionData,
             );
             return response.data;
@@ -63,10 +50,7 @@ export const updateTransaction = createAsyncThunk(
 
 export const deleteTransaction = createAsyncThunk('transaction/deleteTransaction', async (id, { rejectWithValue }) => {
     try {
-        const response = await instance.delete(
-            `https://personal-finacne-tracking.azurewebsites.net/api/Transaction/delete/${id}`);
-            // `https://localhost:7086/api/Transaction/delete/${id}`,
-        // );
+        const response = await instance.delete(`/api/Transaction/delete/${id}`);
         return response.data;
     } catch (error) {
         return rejectWithValue(error.response ? error.response.data : 'An error occurred');

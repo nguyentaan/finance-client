@@ -265,7 +265,9 @@ function Home() {
                                         </button>
                                     </div>
                                 </div>
-                                <DoughnutChart data={doughnutChartData} options={doughnutChartOptions} />
+                                <div>
+                                    <DoughnutChart data={doughnutChartData} options={doughnutChartOptions} />
+                                </div>
                             </div>
                         )}
                     </div>

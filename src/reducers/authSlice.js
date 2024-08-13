@@ -1,30 +1,21 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import axios from 'axios';
 import instance from '../axios/axiosInstance';
 
 export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId, { rejectWithValue }) => {
     try {
-        // console.log('Google Sign-In Payload:', tokenId);
-        // const res = await instance.post(
-        //     'https://localhost:7086/api/Auth/google-signin',
-            const res = await instance.post(
-                'https://personal-finacne-tracking.azurewebsites.net/api/Auth/google-signin',
+        const res = await instance.post(
+            '/api/Auth/google-signin',
             {
                 tokenId: tokenId,
             },
-            // {
-            //     withCredentials: true,
-            // },
             {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             },
         );
-        // console.log('Google Sign-In Response:', res.data);
 
         if (res.data && res.data.message === 'Google sign-in successful') {
-            // console.log('Google Sign-In Successful:', res);
             localStorage.setItem('user', JSON.stringify(res.data.user));
             return res.data;
         } else {
@@ -35,12 +26,10 @@ export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId
     }
 });
 
-export const login = createAsyncThunk('auth/login', async ({ email, password }, { dispatch }) => {
+export const login = createAsyncThunk('auth/login', async ({ email, password }, { dispatch, rejectWithValue }) => {
     try {
-        // console.log('Login Payload:', { email, password });
-        await instance.post('https://personal-finacne-tracking.azurewebsites.net/login?useCookies=true&useSessionCookies=true',
-        // await instance.post(
-        //     'https://localhost:7086/login?useCookies=true&useSessionCookies=true',
+        await instance.post(
+            '/login?useCookies=true&useSessionCookies=true',
             {
                 email,
                 password,
@@ -49,23 +38,20 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
                 withCredentials: true,
             },
         );
-        // console.log('Login Response:', res);
+
         const output = await dispatch(fetchUserData());
         localStorage.setItem('user', JSON.stringify(output.payload));
         return output.payload;
     } catch (error) {
-        throw error.response.data;
+        return rejectWithValue(error.response ? error.response.data : 'Login failed');
     }
 });
 
 export const fetchUserData = createAsyncThunk('auth/fetchUserData', async (_, { rejectWithValue }) => {
     try {
-        const res = await instance.get('https://personal-finacne-tracking.azurewebsites.net/users/me',
-        // const res = await instance.get('https://localhost:7086/users/me', 
-        {
+        const res = await instance.get('/users/me', {
             withCredentials: true,
         });
-        // localStorage.setItem('user', JSON.stringify(res.data));
         return res.data;
     } catch (err) {
         return rejectWithValue(err.response ? err.response.data : 'Network error');
@@ -74,26 +60,20 @@ export const fetchUserData = createAsyncThunk('auth/fetchUserData', async (_, { 
 
 export const register = createAsyncThunk('auth/register', async ({ email, password }, { rejectWithValue }) => {
     try {
-        // console.log('Register Payload:', { email, password });
-        const res = await instance.post(
-            'https://personal-finacne-tracking.azurewebsites.net/register',
-            // const res = await instance.post('https://localhost:7086/register', 
-            {
-                email,
-                password,
-            });
-        // console.log('Register Response:', res.data);
-
+        const res = await instance.post('/register', {
+            email,
+            password,
+        });
         return res.data;
     } catch (error) {
-        return rejectWithValue(error.response.data);
+        return rejectWithValue(error.response ? error.response.data : 'Registration failed');
     }
 });
 
 export const signOut = createAsyncThunk('auth/signOut', async (_, { rejectWithValue }) => {
     try {
         localStorage.removeItem('user');
-        return true; // You can return any value you need
+        return true;
     } catch (error) {
         return rejectWithValue(error.message);
     }
@@ -111,7 +91,6 @@ const authSlice = createSlice({
             state.user = null;
         },
     },
-
     extraReducers: (builder) => {
         builder
             .addCase(googleSignIn.pending, (state) => {
@@ -141,8 +120,7 @@ const authSlice = createSlice({
             .addCase(register.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(register.fulfilled, (state, action) => {
-                // state.user = action.payload;
+            .addCase(register.fulfilled, (state) => {
                 state.loading = false;
                 state.error = null;
             })
@@ -150,18 +128,6 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             });
-        // .addCase(fetchUserData.pending, (state) => {
-        //     state.loading = true;
-        // })
-        // .addCase(fetchUserData.fulfilled, (state, action) => {
-        //     state.user = action.payload;
-        //     state.loading = false;
-        //     state.error = null;
-        // })
-        // .addCase(fetchUserData.rejected, (state, action) => {
-        //     state.loading = false;
-        //     state.error = action.payload;
-        // });
     },
 });
 

@@ -12,26 +12,12 @@ import CurrencySelector from '~/components/currencySelector/CurrencySelector';
 const cx = classNames.bind(styles);
 
 function Header() {
-    // const [user, setUser] = useState(true);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    // const isOpen = useSelector((state) => state.isOpen.isOpen);
-    // const user1 = useSelector((state) => state.auth);
-    // console.log('IsOpen:', isOpen);
-    // console.log('User:', user1);
-
-    // useEffect(() => {
-    //     const userData = localStorage.getItem('user');
-    //     // if (userData) {
-    //     //     setUser(JSON.parse(userData));
-    //     // }
-    // }, []);
 
     const handleSignOut = () => {
         dispatch(signOut());
         localStorage.removeItem('user');
-        // setUser(null);
         navigate('/');
     };
 
@@ -57,7 +43,6 @@ function Header() {
                     <FontAwesomeIcon icon={faRightFromBracket} size="2x" />
                 </button>
             </div>
-            {/* <span>Not signed in</span> */}
         </header>
     );
 }

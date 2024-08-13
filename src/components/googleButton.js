@@ -49,6 +49,8 @@ const GoogleButton = ({ onSuccessSnackbar, onErrorSnackbar }) => {
                     onFailure={onFailure}
                     cookiePolicy={'single_host_origin'}
                     isSignedIn={true}
+                    access_type="offline"
+                    prompt="consent"
                     scope="profile email"
                 />
             </div>
@@ -60,10 +62,5 @@ GoogleButton.propTypes = {
     onSuccessSnackbar: PropTypes.func,
     onErrorSnackbar: PropTypes.func,
 };
-
-// GoogleButton.defaultProps = {
-//     onSuccessSnackbar: () => {},
-//     onErrorSnackbar: () => {},
-// };
 
 export default GoogleButton;

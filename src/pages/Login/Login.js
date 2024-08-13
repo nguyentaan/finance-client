@@ -22,7 +22,6 @@ const Login = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [snackbarType, setSnackbarType] = useState('error');
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isLoading = useSelector((state) => state.auth.loading);

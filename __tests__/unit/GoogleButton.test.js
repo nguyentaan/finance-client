@@ -5,12 +5,13 @@ import { MemoryRouter } from 'react-router-dom';
 import GoogleButton from '../../src/components/googleButton';
 import store from '../../src/reducers/store';
 
-describe('Google button', () => {
+describe('Google button Unit tests', () => {
+
     test('should render Google button', async () => {
         render(
             <Provider store={store}>
                 <MemoryRouter>
-                    <GoogleButton />
+                        <GoogleButton />
                 </MemoryRouter>
             </Provider>,
         );

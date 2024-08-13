@@ -27,7 +27,7 @@ describe('Header', () => {
 
     test('should render header', async () => {
         server.use(
-            http.get('http://localhost:5215/users/me', (req, res, ctx) => {
+            http.get('https://personal-finacne-tracking.azurewebsites.net/users/me', (req, res, ctx) => {
                 return res(
                     ctx.status(200),
                     ctx.json({
@@ -61,7 +61,7 @@ describe('Header', () => {
     });
     test('should sign out', async () => {
         server.use(
-            http.get('http://localhost:5215/users/me', (req, res, ctx) => {
+            http.get('https://personal-finacne-tracking.azurewebsites.net/users/me', (req, res, ctx) => {
                 return res(
                     ctx.status(200),
                     ctx.json({
@@ -70,8 +70,8 @@ describe('Header', () => {
                         userName: 'test@example.com',
                     }),
                 );
-            }
-        ));
+            }),
+        );
         render(
             <Provider store={store}>
                 <MemoryRouter>
@@ -90,7 +90,7 @@ describe('Header', () => {
 
     test('should dispatch toggleIsOpen action on clicking "Add transaction" button', async () => {
         server.use(
-            http.get('http://localhost:5215/users/me', (req, res, ctx) => {
+            http.get('https://personal-finacne-tracking.azurewebsites.net/users/me', (req, res, ctx) => {
                 return res(
                     ctx.status(200),
                     ctx.json({
