@@ -18,44 +18,54 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [errors, setErrors] = useState({});
+    const [successMessage, setSuccessMessage] = useState('');
     const [showSnackbar, setShowSnackbar] = useState(false);
-
+    const [snackbarType, setSnackbarType] = useState('error');
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isLoading = useSelector((state) => state.auth.loading);
-    // const isLoading = true;
-    // const isLoading = false;
+
+    useEffect(() => {
+        if (error) {
+            setHasEmailError(true);
+            setHasPasswordError(true);
+        }
+    }, [error]);
 
     const validateForm = () => {
-        let isValid = true;
+        const newErrors = {};
         if (!email) {
-            setError('Please enter your email');
-            isValid = false;
+            newErrors.email = 'Please enter your email';
         }
         if (!password) {
-            setError('Please enter your password');
-            isValid = false;
+            newErrors.password = 'Please enter your email';
         }
-        return isValid;
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
     const handleLogin = async (e) => {
         e.preventDefault();
         if (validateForm()) {
             try {
                 const payload = { email, password };
-                // console.log('Login Payload:', payload); // Additional logging
                 const response = await dispatch(login(payload));
-                // console.log('Login Response:', response);
-                // console.log('status code:', response.payload.status);
-                console.log('Login Response:', response.meta.requestStatus);
+                // console.log('Login Response:', response.meta.requestStatus);
                 if (response.meta.requestStatus === 'fulfilled') {
-                    navigate('/dashboard');
+                    setSuccessMessage('Login successful');
+                    setSnackbarType('success');
+                    setShowSnackbar(true);
+                    setTimeout(() => {
+                        navigate('/dashboard');
+                    }, 1000);
                 } else if (response.error) {
                     setError('Invalid email or password');
+                    setSnackbarType('error');
                     setShowSnackbar(true);
                 }
             } catch (err) {
                 setError(err.message);
+                setSnackbarType('error');
                 setShowSnackbar(true);
             }
         }
@@ -68,9 +78,31 @@ const Login = () => {
         }
     }, [error]);
 
+    const handleSnackbarOpen = (message, type) => {
+        if (type === 'success') {
+            setSuccessMessage(message); // Set success message
+        } else if (type === 'error') {
+            setError(message); // Set error message
+        }
+        setSnackbarType(type);
+        setShowSnackbar(true);
+        // console.log('Snackbar:', message);
+    };
+
+    const handleSnackbarClose = () => {
+        setShowSnackbar(false);
+    };
+
     return (
         <div className={cx('container')}>
-            <CustomSnackbar open={showSnackbar} message={error} onClose={() => setShowSnackbar(false)} />
+            <div data-testid="snackbar">
+                <CustomSnackbar
+                    open={showSnackbar}
+                    message={snackbarType === 'success' ? successMessage : error}
+                    onClose={handleSnackbarClose}
+                    severity={snackbarType} // Pass type to CustomSnackbar
+                />
+            </div>
             <div className={cx('column')}>
                 <div className={cx('title')}>
                     <h1>Welcome</h1>
@@ -87,7 +119,12 @@ const Login = () => {
                             <h1>Login to Your Account</h1>
                             <span>See what is going on with your business</span>
                         </div>
-                        <GoogleButton />
+                        <div data-testid="google-button">
+                            <GoogleButton
+                                onSuccessSnackbar={(message) => handleSnackbarOpen(message, 'success')}
+                                onErrorSnackbar={(message) => handleSnackbarOpen(message, 'error')}
+                            />
+                        </div>
                     </div>
                     <div className={cx('content-form')}>
                         <span className={cx('or')}>------------- or Sign in with Email -------------</span>
@@ -105,14 +142,16 @@ const Login = () => {
                                         setHasEmailError(false);
                                     }}
                                 />
-                                {/* {hasEmailError && <p className={cx('error-message')}>{error}</p>} */}
+                                <div data-testid="error-message-email">
+                                    {errors.email && <p className={cx('error-message')}>{errors.email}</p>}
+                                </div>
                             </div>
 
                             <div className={cx('input-group')}>
                                 <label className={cx('label')}>Password</label>
                                 <input
                                     type="password"
-                                    placeholder="password"
+                                    placeholder="Password"
                                     className={cx('input', { hasError: hasPasswordError })}
                                     id="Password"
                                     value={password}
@@ -121,7 +160,9 @@ const Login = () => {
                                         setHasPasswordError(false);
                                     }}
                                 />
-                                {/* {hasPasswordError && <p className={cx('error-message')}>{error}</p>} */}
+                                <div data-testid="error-message-password">
+                                    {errors.password && <p className={cx('error-message')}>{errors.password}</p>}
+                                </div>
                             </div>
                             <div className={cx('options')}>
                                 <div className={cx('remember-me')}>
@@ -134,9 +175,16 @@ const Login = () => {
                             </div>
                             <div className={cx('button', 'color-button')}>
                                 {isLoading ? (
-                                    <Loading />
+                                    <div data-testid="loading">
+                                        <Loading />
+                                    </div>
                                 ) : (
-                                    <input type="submit" value={'Sign in'} disabled={isLoading} />
+                                    <input
+                                        data-testid="submit-button"
+                                        type="submit"
+                                        value={'Sign in'}
+                                        disabled={isLoading}
+                                    />
                                 )}
                             </div>
                             <div className={cx('create-account')}>
@@ -144,7 +192,6 @@ const Login = () => {
                                 <Link to="/register">Create account</Link>
                             </div>
                         </form>
-                        {/* {error && <p className={cx('error-message')}>{error}</p>} */}
                     </div>
                 </div>
             </div>

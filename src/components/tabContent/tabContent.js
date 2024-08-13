@@ -1,21 +1,54 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './tabContent.module.css';
-import { toggleIsOpen } from '~/reducers/homeSlice';
+import { toggleIsOpen, setIsUpdate } from '~/reducers/homeSlice';
+import { createTransaction, fetchTransactionsByEmail, updateTransaction } from '~/reducers/transSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { createTransaction } from '~/reducers/transSlice';
-import { useState } from 'react';
 import Loading from '~/components/Layout/DefautLayout/loading/loading';
 
 const cx = classNames.bind(styles);
 
-const TabContent = () => {
+const TabContent = ({ edit, transactionToEdit }) => {
     const dispatch = useDispatch();
     const isOpen = useSelector((state) => state.isOpen.isOpen);
     const user = useSelector((state) => state.auth);
-    const [selectedOption, setSelectedOption] = React.useState('...');
+    const userEmail = user.user.email;
+    const [selectedOption, setSelectedOption] = useState('...');
+    const [formData, setFormData] = useState({
+        name: '',
+        description: '',
+        type: '',
+        userEmail: userEmail,
+        amount: 0,
+        dateTime: '',
+    });
+
+    useEffect(() => {
+        if (edit && transactionToEdit) {
+            setFormData({
+                name: transactionToEdit.name,
+                description: transactionToEdit.description,
+                type: transactionToEdit.type,
+                userEmail: transactionToEdit.userEmail,
+                amount: transactionToEdit.amount,
+                dateTime: new Date(transactionToEdit.date).toISOString().split('T')[0], // Format for input type="date"
+            });
+            setSelectedOption(transactionToEdit.type);
+        } else {
+            // Reset formData when not in edit mode
+            setFormData({
+                name: '',
+                description: '',
+                type: '',
+                userEmail: userEmail,
+                amount: 0,
+                dateTime: '',
+            });
+            setSelectedOption('...');
+        }
+    }, [edit, transactionToEdit, userEmail]);
 
     const handleSelect = (option) => {
         setSelectedOption(option);
@@ -27,19 +60,10 @@ const TabContent = () => {
 
     const handleCloseTab = () => {
         dispatch(toggleIsOpen());
+        dispatch(setIsUpdate(false));
     };
 
-    // console.log('User:', user.user.email);
-    const { loading, error } = useSelector((state) => state.transactions);
-    // const loading = true;
-    const [formData, setFormData] = useState({
-        name: '',
-        description: '',
-        type: '',
-        userEmail: user.user.email,
-        amount: 0,
-        dateTime: '',
-    });
+    const { loading } = useSelector((state) => state.transactions);
 
     const handleChange = (e) => {
         setFormData({
@@ -50,12 +74,25 @@ const TabContent = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const res = await dispatch(createTransaction(formData));
-        if (res.meta.requestStatus === 'fulfilled') {
-            console.log('Transaction created successfully:', res.payload);
-            handleCloseTab();
+        if (edit && transactionToEdit) {
+            console.log('Updating transaction:', { ...formData, id: transactionToEdit.id });
+            const res = await dispatch(updateTransaction({ ...formData, id: transactionToEdit.id }));
+            if (res.meta.requestStatus === 'fulfilled') {
+                console.log('Transaction updated successfully:', res.payload);
+                await dispatch(fetchTransactionsByEmail(userEmail));
+                handleCloseTab();
+            } else {
+                console.log('Error updating transaction:', res.error.message);
+            }
         } else {
-            console.log('Error creating transaction:', res.error.message);
+            const res = await dispatch(createTransaction(formData));
+            if (res.meta.requestStatus === 'fulfilled') {
+                console.log('Transaction created successfully:', res.payload);
+                await dispatch(fetchTransactionsByEmail(userEmail));
+                handleCloseTab();
+            } else {
+                console.log('Error creating transaction:', res.error.message);
+            }
         }
     };
 
@@ -80,7 +117,7 @@ const TabContent = () => {
                                     </div>
                                 </div>
                                 <div className={cx('options')}>
-                                    {['...', 'Income', 'Expense'].map((option, index) => (
+                                    {['...', 'Income', 'Expense'].map((option) => (
                                         <div key={option} title={option}>
                                             <input
                                                 id={option}
@@ -90,7 +127,7 @@ const TabContent = () => {
                                                 onChange={() => handleSelect(option)}
                                             />
                                             <label className={cx('option')} htmlFor={option} data-txt={option}>
-                                                {option}
+                                                {/* {option} */}
                                             </label>
                                         </div>
                                     ))}
@@ -146,9 +183,8 @@ const TabContent = () => {
                         </div>
                     </div>
                     <button className={cx('submit-button')} type="submit">
-                        {loading ? <Loading /> : 'Add transaction'}
+                        {loading ? <Loading /> : (edit ? 'Update transaction' : 'Add transaction')}
                     </button>
-                    {error && <p className={cx('error')}>{error}</p>}
                 </form>
             </div>
         </div>

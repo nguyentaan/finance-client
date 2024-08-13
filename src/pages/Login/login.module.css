@@ -60,7 +60,6 @@
     max-width: 400px;
     width: 100%;
     /* display: flex; */
-
 }
 
 .content-title {
@@ -72,6 +71,9 @@
 
 .title-login {
     margin: 20px 0;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
 }
 
 .button {
@@ -247,4 +249,10 @@
     .container {
         padding: 40px;
     }
+}
+
+.error-message {
+    color: red;
+    font-size: 1.2rem;
+    margin-top: 6px;
 }
