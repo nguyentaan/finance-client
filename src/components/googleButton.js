@@ -14,6 +14,8 @@ const GoogleButton = ({ onSuccessSnackbar, onErrorSnackbar }) => {
     const onSuccess = async (response) => {
         try {
             const actionResult = await dispatch(googleSignIn(response.credential));
+            console.log('actionResult', actionResult);
+            
             const { meta, payload } = actionResult;
 
             if (meta.requestStatus === 'fulfilled') {

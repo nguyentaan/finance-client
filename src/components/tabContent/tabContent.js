@@ -114,7 +114,12 @@ const TabContent = ({ edit, transactionToEdit }) => {
                         <div className={cx('item-content')}>
                             <h3>Type</h3>
                             <div className={cx('select')}>
-                                <div className={cx('selected')} data-one="Income" data-two="Expense">
+                                <div
+                                    className={cx('selected')}
+                                    data-default="Income"
+                                    data-one="Income"
+                                    data-two="Expense"
+                                >
                                     {selectedOption}
                                     <div className={cx('arrow')}>
                                         <FontAwesomeIcon icon={faChevronDown} size="1x" />
