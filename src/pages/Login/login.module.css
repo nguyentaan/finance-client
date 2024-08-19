@@ -24,17 +24,18 @@
 }
 
 .column {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: #ffffff;
     width: 100%;
-    height: 100%;
+    height: 90%;
     max-width: 600px;
     border-radius: 20px;
     padding: 20px;
-    margin: auto 20px;
+    margin: 20px;
 }
 
 .title {
@@ -43,7 +44,7 @@
     align-items: center;
     margin: 40px;
     h1 {
-        font-size: 36px;
+        font-size: 3rem;
         font-weight: bold;
     }
 }
@@ -54,6 +55,8 @@
     height: auto;
     /* margin: 20px; */
     padding: auto;
+    max-height: 100%;
+    object-fit: cover;
 }
 
 .content {
@@ -74,6 +77,16 @@
     flex-direction: column;
     display: flex;
     align-items: center;
+}
+
+.title-login h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.title-login span {
+    font-size: 1.6rem;
+    color: #666;
 }
 
 .button {
@@ -111,7 +124,10 @@
 }
 
 .or {
-    margin: 40px 0;
+    display: block;
+    text-align: center;
+    margin: 20px 0;
+    color: #999;
 }
 
 .form {
@@ -220,34 +236,55 @@
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
-        gap: 20px;
-    }
-
-    .column {
-        width: 100%;
-        max-width: unset;
-        height: 100%;
-    }
-
-    .title {
-        display: block;
-    }
-
-    .image img {
-        width: 100%;
-        max-width: 100%;
         height: auto;
-        margin: 20px;
+    }
+
+    /* Ensure the first column is hidden on smaller screens */
+    .container .column:first-child {
+        display: none !important;
+    }
+
+    /* Adjust the layout of the remaining column */
+    .container .column {
+        flex: none;
+        width: 100%;
+        padding: 1rem;
     }
 
     .content {
-        text-align: left;
+        max-width: 100%;
+    }
+
+    .title {
+        margin-bottom: 1rem;
     }
 }
 
-@media (min-width: 1024px) {
-    .container {
-        padding: 40px;
+@media (max-width: 480px) {
+    .column {
+        padding: 0.5rem;
+    }
+
+    .content-form .or {
+        font-size: 0.8rem;
+    }
+
+    .input-group .label {
+        font-size: 0.9rem;
+    }
+
+    .input-group .input {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+
+    .button input {
+        font-size: 1rem;
+        padding: 0.7rem;
+    }
+
+    .create-account {
+        font-size: 0.9rem;
     }
 }
 
