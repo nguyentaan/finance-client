@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import instance from '../axios/axiosInstance';
 
 export const googleSignIn = createAsyncThunk('auth/googleSignIn', async (tokenId, { rejectWithValue }) => {
-    console.log('tokenID', tokenId);
     try {
         const res = await instance.post(
             '/api/Auth/google-signin',
