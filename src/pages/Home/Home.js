@@ -214,6 +214,7 @@ function Home() {
                                                 <p
                                                     style={{
                                                         color: transaction.type === 'Income' ? '#20C997' : '#E74C3C',
+                                                        fontSize: transaction.amount >= 1000 ? '1.5rem' : '2rem',
                                                     }}
                                                 >
                                                     {transaction.amount >= 1000
