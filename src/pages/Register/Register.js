@@ -126,7 +126,7 @@ function Register() {
                     severity={snackbarType}
                 />
             </div>
-            <div className={cx('column')}>
+            <div className={cx('column', 'none-display')}>
                 <div className={cx('title')}>
                     <h1>Welcome</h1>
                     <h1>Personal Finance Tracker</h1>

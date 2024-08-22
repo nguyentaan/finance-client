@@ -235,54 +235,46 @@
 
 @media (max-width: 768px) {
     .container {
-        flex-direction: column;
-        height: auto;
+        /* flex-direction: column; */
+        height: 100vh;
     }
-
-    /* Ensure the first column is hidden on smaller screens */
-    .container .column:first-child {
-        display: none !important;
+    .none-display {
+        display: none;
     }
-
-    /* Adjust the layout of the remaining column */
-    .container .column {
+    .column {
         flex: none;
         width: 100%;
         padding: 1rem;
     }
-
     .content {
         max-width: 100%;
     }
-
     .title {
         margin-bottom: 1rem;
     }
 }
 
 @media (max-width: 480px) {
+    .none-display {
+        display: none;
+    }
     .column {
         padding: 0.5rem;
     }
-
     .content-form .or {
         font-size: 0.8rem;
     }
-
     .input-group .label {
         font-size: 0.9rem;
     }
-
     .input-group .input {
         font-size: 0.9rem;
         padding: 0.5rem;
     }
-
     .button input {
         font-size: 1rem;
         padding: 0.7rem;
     }
-
     .create-account {
         font-size: 0.9rem;
     }

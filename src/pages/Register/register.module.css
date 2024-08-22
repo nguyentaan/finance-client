@@ -231,13 +231,12 @@
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
-        height: auto;
+        height: 100vh;
     }
 
-    .column:first-child {
+    .none-display {
         display: none;
     }
-
     .column {
         flex: none;
         width: 100%;
@@ -254,6 +253,9 @@
 }
 
 @media (max-width: 480px) {
+        .none-display {
+        display: none;
+    }
     .column {
         padding: 0.5rem;
     }

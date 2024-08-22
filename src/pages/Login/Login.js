@@ -103,7 +103,7 @@ const Login = () => {
                     severity={snackbarType} // Pass type to CustomSnackbar
                 />
             </div>
-            <div className={cx('column')}>
+            <div className={cx('column', 'none-display')}>
                 <div className={cx('title')}>
                     <h1>Welcome</h1>
                     <h1>Personal Finance Tracker</h1>

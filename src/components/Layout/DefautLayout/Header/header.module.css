@@ -49,3 +49,36 @@
     border-radius: 99px;
     color: #333;
 }
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 16px;
+    }
+    .group-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+    .button-action {
+        width: 100%;
+        justify-content: space-between;
+        margin: 8px 0;
+    }
+    .header-container h2 {
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-container {
+        padding: 10px 8px;
+    }
+    .button-action p {
+        font-size: 0.9rem;
+    }
+    .icon-action {
+        padding: 2px;
+    }
+}
